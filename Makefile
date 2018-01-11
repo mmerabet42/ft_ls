@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
+#    Updated: 2018/01/11 22:57:13 by mmerabet         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME		=	ft_ls
 CC			=	gcc
 CFLAGS		=	-Wall -Werror -Wextra
@@ -5,7 +17,7 @@ CFLAGS		=	-Wall -Werror -Wextra
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
 
-_FT_LSS	=		main.c ft_ls.c \
+_FT_LSS	=		main.c ls_getoptions.c ls_getmodes.c ls_getnames.c \
 
 SRCD		=	srcs
 ICLD		=	-Iincludes -I$(LIBFTD)/includes
@@ -46,7 +58,7 @@ $(LIBFT):
 	@make -C $(LIBFTD)
 
 %.o: %.c
-	@$(CC) $(CFAGS) -c -o $@ $< $(ICLD)
+	@$(CC) -c -o $@ $< $(ICLD) $(CFLAGS)
 
 clean:
 	@make -C $(LIBFTD) clean
