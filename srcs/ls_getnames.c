@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 22:49:41 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/11 23:04:57 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/12 23:01:15 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,33 @@
 #include <grp.h>
 #include <pwd.h>
 
-void	ls_getnames(struct stat file_stat, char **grp_name, char **usr_name)
+char	*ls_getgrpname(gid_t gid)
 {
 	struct group	*grp;
-	struct passwd	*usr;
+	char			*nm;
 
-	if (!grp_name || !usr_name)
-		return ;
-	*grp_name = NULL;
-	*usr_name = NULL;
-	if ((grp = getgrgid(file_stat.st_gid)))
-		*grp_name = grp->gr_name;
-	if ((usr = getpwuid(file_stat.st_uid)))
-		*usr_name = usr->pw_name;
+	nm = NULL;
+	if ((grp = getgrgid(gid)))
+		nm = grp->gr_name;
+	return (nm);
+}
+
+char	*ls_getusrname(uid_t uid)
+{
+	struct passwd	*usr;
+	char			*nm;
+
+	nm = NULL;
+	if ((usr = getpwuid(uid)))
+		nm = usr->pw_name;
+	return (nm);
+}
+
+int		ls_isfar(t_timef *a, t_timef *b)
+{
+	if (!a || !b)
+		return (0);
+	if ((int)a->month < (int)b->month - 6 || (int)a->month > (int)b->month + 6)
+		return (1);
+	return (0);
 }
