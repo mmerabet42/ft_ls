@@ -6,6 +6,7 @@
 # include <sys/stat.h>
 
 # include "ft_list.h"
+# include "ft_btree.h"
 # include "ft_time.h"
 
 # define LSF_L 1
@@ -20,29 +21,33 @@ typedef struct		s_lsops
 	char			err;
 	int				options;
 	t_list			*files;
+	t_timef			*current;
 }					t_lsops;
 
 typedef struct		s_file
 {
-	int				fd;
-	char			*err;
 	char			*name;
 	char			*modes;
 	char			*grp_name;
 	char			*usr_name;
 	int				isfar;
 	t_timef			*mtime;
-	struct stat		fst;
+	struct stat		file_stat;
+	t_btree			*childs;
 }					t_file;
 
 t_lsops				*ls_getoptions(int argc, char **argv);
-t_file				*ls_filenew(const char *file_name);
+t_file				*ls_filenew(const char *file_name,
+							int childs,
+							t_cmpfunc sortfunc);
 void				ls_filedel(t_file *f);
 void				ls_getmodes(struct stat file_stat,
 							const char *path,
 							char *buffer);
 char				*ls_getgrpname(gid_t gid);
 char				*ls_getusrname(uid_t uid);
-int					ls_isfar(t_timef *a, t_timef *b);
+
+int					ls_cmpfile_name(const void *a, const void *b, size_t n);
+int					ls_cmpfile_time(const void *a, const void *b, size_t n);
 
 #endif

@@ -1,37 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ls_getnames.c                                      :+:      :+:    :+:   */
+/*   ls_cmpfile.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/01/11 22:49:41 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/13 22:01:24 by mmerabet         ###   ########.fr       */
+/*   Created: 2018/01/13 22:50:33 by mmerabet          #+#    #+#             */
+/*   Updated: 2018/01/13 22:56:14 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-#include <grp.h>
-#include <pwd.h>
 
-char	*ls_getgrpname(gid_t gid)
+int	ls_cmpfile_name(const void *a, const void *b, size_t n)
 {
-	struct group	*grp;
-	char			*nm;
-
-	nm = NULL;
-	if ((grp = getgrgid(gid)))
-		nm = grp->gr_name;
-	return (nm);
+	return (ft_strcmp(((t_file *)a)->name, ((t_file *)b)->name));
 }
 
-char	*ls_getusrname(uid_t uid)
+int	ls_cmpfile_time(const void *a, const void *b, size_t n)
 {
-	struct passwd	*usr;
-	char			*nm;
-
-	nm = NULL;
-	if ((usr = getpwuid(uid)))
-		nm = usr->pw_name;
-	return (nm);
+	return (((t_file *)a)->mtime->full - ((t_file *)b)->mtime->full);
 }

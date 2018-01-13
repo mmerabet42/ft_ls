@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/01/11 22:57:13 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/01/13 23:19:24 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
 
 _FT_LSS	=		main.c ls_getoptions.c ls_getmodes.c ls_getnames.c \
+				ls_filenew.c ls_cmpfile.c \
 
 SRCD		=	srcs
 ICLD		=	-Iincludes -I$(LIBFTD)/includes
@@ -43,7 +44,7 @@ _WHITE=\x1b[37m
 _END=\x1b[0m
 _SUCCESS=$(_RED)
 
-.PHONY: all clean fclean re comp
+.PHONY: all clean fclean re
 
 all: $(LIBFT) $(NAME)
 

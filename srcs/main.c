@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/12 23:14:37 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/13 23:17:58 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	main(int argc, char **argv)
 	struct stat		fst;
 	char			modes_buffer[12];
 	t_timef			*tf;
-	t_timef			*cur;
 	time_t			cur_t;
 
 	if (!(lsops = ls_getoptions(argc, argv)))
@@ -35,11 +34,10 @@ int	main(int argc, char **argv)
 				"usage: ls [%s] [file ...]\n", lsops->err, LSFLAGS);
 	else
 	{
+		cur_t = time(NULL);
+		lsops.current = ft_timefnew(&cur_t);
 		lst = lsops->files;
 		ft_bzero(modes_buffer, 12);
-		cur_t = time(NULL);
-		cur = ft_timefnew(&cur_t);
-		ft_printf("Current time : %u\n", cur->month);
 		while (lst)
 		{
 			if ((fd = open((char *)lst->content, O_RDONLY)) == -1)
