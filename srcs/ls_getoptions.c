@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/12 20:29:18 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/14 22:46:39 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static int		get_flag(char c)
 		return (LSF_R);
 	else if (c == 't')
 		return (LSF_T);
+	else if (c == 'G')
+		return (LSF_G_M);
 	return (0);
 }
 

@@ -14,7 +14,8 @@
 # define LSF_A 4
 # define LSF_R 8
 # define LSF_T 16
-# define LSFLAGS "lRart"
+# define LSF_G_M 32
+# define LSFLAGS "lRartG"
 
 typedef struct		s_lsops
 {
@@ -27,19 +28,21 @@ typedef struct		s_lsops
 typedef struct		s_file
 {
 	char			*name;
-	char			*modes;
+	char			link_name[512];
+	char			modes[12];
 	char			*grp_name;
 	char			*usr_name;
 	int				isfar;
 	t_timef			*mtime;
 	struct stat		file_stat;
-	t_btree			*childs;
+	t_btree			*files;
 }					t_file;
 
 t_lsops				*ls_getoptions(int argc, char **argv);
-t_file				*ls_filenew(const char *file_name,
-							int childs,
-							t_cmpfunc sortfunc);
+t_file				*ls_getfile(const char *file_name, t_timef *current_time);
+t_btree				*ls_getfiles(const char *file_name,
+							t_cmpfunc sortfunc,
+							t_lsops *lsops);
 void				ls_filedel(t_file *f);
 void				ls_getmodes(struct stat file_stat,
 							const char *path,
