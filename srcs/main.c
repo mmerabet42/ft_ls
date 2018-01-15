@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/15 19:22:51 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/15 23:10:31 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void		listfiles(t_btree *files, const t_lsops *lsops)
 		{
 			if ((file = (t_file *)lst->content) && file->modes[0] == 'd')
 			{
+				ft_printf("\n");
 				ft_printf("%s:\n", file->full_name);
 				files = ls_getfiles(file->full_name, lsops);
 				if (!files)
@@ -91,7 +92,7 @@ int			main(int argc, char **argv)
 				listfiles(files, lsops);
 			}
 			if (lst->next)
-				ft_printf("\n\n");
+				ft_putstr("\n\n");
 			lst = lst->next;
 		}
 		ft_timefdel(&lsops->current);

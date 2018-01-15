@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/15 19:16:12 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/15 23:09:32 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,8 @@ void		ls_printnormal(t_list *files, const t_lsops *lsops)
 			ft_printf("%{%s}%#{%s}%-*s%{%s}%s", (b ? file_fg(file) : "-"),
 					(b ? file_bg(file) : "-"), (files->next ? wds[4] : -1),
 					file->name, (b ? "0" : "-"), (files->next ? " " : ""));
-			if ((n += wds[4] + (files->next ? 1 : 0)) + wds[4] >= w.ws_col)
+			if ((n += wds[4] + (files->next ? 1 : 0)) + wds[4] >= w.ws_col
+					&& files->next)
 			{
 				ft_printf("\n");
 				n = 0;

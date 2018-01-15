@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 23:02:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/15 19:22:53 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/15 23:10:33 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ t_btree		*ls_getfiles(const char *file_name,
 				bt = tmp;
 		}
 	}
+	closedir(d);
 	return (bt);
 }
 
