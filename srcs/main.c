@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/14 23:23:36 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/15 19:22:51 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,85 +18,43 @@
 #include <stdio.h>
 #include <errno.h>
 
-t_cmpfunc	getcmpfunc(const t_lsops *lsops)
+void		getcmpfunc(t_lsops *lsops)
 {
 	if (lsops->options & LSF_T)
-		return (ls_cmpfile_time);
-	return (ls_cmpfile_name);
-}
-
-char		*file_fg(t_file *file)
-{
-	if (file->modes[0] == 'd')
-		return ("lblue");
-	else if (file->modes[0] == 'l')
-		return ("lyellow");
-	else if (file->name[0] == '.')
-		return ("lgreen");
-	return ("white");
-}
-
-char		*file_bg(t_file *file)
-{
-	(void)file;
-	return ("");
-}
-
-void		getmaxwidth(int maxs[5], t_list *lst)
-{
-	t_list	*it;
-	t_file	*file;
-
-	ft_bzero(maxs, sizeof(int) * 5);
-	it = lst;
-	while (it)
-	{
-		if ((file = (t_file *)it->content))
-		{
-			maxs[0] = ft_max(maxs[0], ft_uintlen(file->file_stat.st_nlink));
-			maxs[1] = ft_max(maxs[1], ft_strlen(file->usr_name));
-			maxs[2] = ft_max(maxs[2], ft_strlen(file->grp_name));
-			maxs[3] = ft_max(maxs[3], ft_uintlen(file->file_stat.st_size));
-			maxs[4] = ft_max(maxs[4], ft_strlen(file->name));
-		}
-		it = it->next;
-	}
+		lsops->sortfunc = ls_cmpfile_time;
+	else
+		lsops->sortfunc = ls_cmpfile_name;
 }
 
 void		listfiles(t_btree *files, const t_lsops *lsops)
 {
 	t_list	*lst;
 	t_file	*file;
-	int		maxs[5];
 
 	if (!files || !lsops)
 		return ;
-	lst = ft_btree_tolist(files);
-	getmaxwidth(maxs, lst);
-	while (lst)
+	lst = (lsops->options & LSF_R ? ft_btree_tolistv(files) :
+			ft_btree_tolist(files));
+	if (lsops->options & LSF_L)
+		ls_printlong(lst, lsops);
+	else
+		ls_printnormal(lst, lsops);
+	if (lsops->options & LSF_R_M)
 	{
-		if ((file = (t_file *)lst->content))
+		while (lst)
 		{
-			if (lsops->options & LSF_L)
+			if ((file = (t_file *)lst->content) && file->modes[0] == 'd')
 			{
-				ft_printf("%s %*lu %{lred}%-*s  %-*s%{0}  %*lu "
-						"%{cyan}%s %2u %02u:%02u%{0} %{%s}%#{%s}%s%{0}",
-						file->modes, maxs[0], file->file_stat.st_nlink,
-						maxs[1], file->usr_name, maxs[2], file->grp_name,
-						maxs[3], file->file_stat.st_size,
-						file->mtime->cmonth, file->mtime->day,
-						file->mtime->hour, file->mtime->min,
-						file_fg(file), file_bg(file), file->name);
-				if (file->link_name[0])
-					ft_printf(" -> %s", file->link_name);
-				ft_printf("\n");
+				ft_printf("%s:\n", file->full_name);
+				files = ls_getfiles(file->full_name, lsops);
+				if (!files)
+					ft_printf_fd(2, "ft_ls: %s: %s\n", file->full_name,
+							strerror(errno));
+				else
+					listfiles(files, lsops);
 			}
-			else
-				ft_printf("%{%s}%#{%s}%-*s%{0}%s", file_fg(file), file_bg(file),
-						(lst->next ? maxs[4] : -1), file->name, (lst->next ? " " : ""));
+			lst = lst->next;
 		}
-		ft_printf("\n");
-		lst = lst->next;
 	}
 }
 
@@ -118,10 +76,11 @@ int			main(int argc, char **argv)
 		cur_t = time(NULL);
 		lsops->current = ft_timefnew(&cur_t);
 		lst = (lsops->files ? lsops->files : ft_lstcreate(".", 2));
+		getcmpfunc(lsops);
 		file_size = ft_lstsize(lst);
 		while (lst)
 		{
-			files = ls_getfiles((char *)lst->content, getcmpfunc(lsops), lsops);
+			files = ls_getfiles((char *)lst->content, lsops);
 			if (!files)
 				ft_printf_fd(2, "ft_ls: %s: %s\n", lst->content,
 						strerror(errno));
@@ -132,7 +91,7 @@ int			main(int argc, char **argv)
 				listfiles(files, lsops);
 			}
 			if (lst->next)
-				ft_printf("\n");
+				ft_printf("\n\n");
 			lst = lst->next;
 		}
 		ft_timefdel(&lsops->current);
