@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/15 23:10:31 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/16 23:27:24 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,14 @@ void		listfiles(t_btree *files, const t_lsops *lsops)
 	{
 		while (lst)
 		{
-			if ((file = (t_file *)lst->content) && file->modes[0] == 'd')
+			if ((file = (t_file *)lst->content) && file->modes[0] == 'd'
+					&& !(ft_strequ(file->name, ".") || ft_strequ(file->name, "..")))
 			{
 				ft_printf("\n");
 				ft_printf("%s:\n", file->full_name);
 				files = ls_getfiles(file->full_name, lsops);
 				if (!files)
-					ft_printf_fd(2, "ft_ls: %s: %s\n", file->full_name,
+					ft_printf_fd(2, "ft_ls: %s: %s\n", file->name,
 							strerror(errno));
 				else
 					listfiles(files, lsops);
@@ -59,12 +60,16 @@ void		listfiles(t_btree *files, const t_lsops *lsops)
 	}
 }
 
+void lstiter(t_list *lst)
+{
+	ft_printf("%s\n", lst->content);
+}
+
 int			main(int argc, char **argv)
 {
 	t_lsops			*lsops;
 	t_list			*lst;
 	t_btree			*files;
-	time_t			cur_t;
 	int				file_size;
 
 	if (!(lsops = ls_getoptions(argc, argv)))
@@ -74,9 +79,7 @@ int			main(int argc, char **argv)
 				"usage: ls [-%s] [file ...]\n", lsops->err, LSFLAGS);
 	else
 	{
-		cur_t = time(NULL);
-		lsops->current = ft_timefnew(&cur_t);
-		lst = (lsops->files ? lsops->files : ft_lstcreate(".", 2));
+		lst = (lsops->files ? ft_lstsort(lsops->files) : ft_lstcreate(".", 2));
 		getcmpfunc(lsops);
 		file_size = ft_lstsize(lst);
 		while (lst)
@@ -87,12 +90,12 @@ int			main(int argc, char **argv)
 						strerror(errno));
 			else
 			{
-				if (file_size > 1)
+				if (lst->next || lst->parent)
 					ft_printf("%s:\n", lst->content);
 				listfiles(files, lsops);
 			}
 			if (lst->next)
-				ft_putstr("\n\n");
+				ft_putstr("\n");
 			lst = lst->next;
 		}
 		ft_timefdel(&lsops->current);

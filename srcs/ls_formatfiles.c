@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/15 23:09:32 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/16 23:27:21 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,18 @@
 #include "ft_str.h"
 #include "ft_printf.h"
 #include <sys/ioctl.h>
+#include <sys/types.h>
 #include <unistd.h>
 
-static void	getwidths(int widths[5], t_list *lst)
+static int	getwidths(int widths[7], t_list *lst)
 {
-	t_list	*it;
-	t_file	*file;
+	t_list			*it;
+	t_file			*file;
+	unsigned long	blks;
 
-	ft_bzero(widths, sizeof(int) * 5);
+	ft_bzero(widths, sizeof(int) * 7);
 	it = lst;
+	blks = 0;
 	while (it)
 	{
 		if ((file = (t_file *)it->content))
@@ -37,9 +40,13 @@ static void	getwidths(int widths[5], t_list *lst)
 					ft_strlen(file->grp_name ? file->grp_name : "(null)"));
 			widths[3] = ft_max(widths[3], ft_uintlen(file->fst.st_size));
 			widths[4] = ft_max(widths[4], ft_strlen(file->name));
+			widths[5] = ft_max(widths[5], ft_uintlen(major(file->fst.st_rdev)));
+			widths[6] = ft_max(widths[6], ft_uintlen(minor(file->fst.st_rdev)));
+			blks += file->fst.st_blocks;
 		}
 		it = it->next;
 	}
+	return (blks);
 }
 
 static char	*file_fg(t_file *file)
@@ -56,31 +63,38 @@ static char	*file_fg(t_file *file)
 	return ("white");
 }
 
-static char	*file_bg(t_file *file)
+static char				*printsize(t_file *file, int widths[7])
 {
-	(void)file;
-	return ("");
+	static char	*final;
+	int			mjr;
+	int			mnr;
+
+	mjr = major(file->fst.st_rdev);
+	mnr = minor(file->fst.st_rdev);
+	ft_printf_s(&final, "%*u, %*u", widths[5], mjr,
+			widths[6], mnr);
+	return (final);
 }
 
-void		ls_printlong(t_list *files, const t_lsops *lsops)
+void					ls_printlong(t_list *files, const t_lsops *lsops)
 {
-	int		wds[5];
+	int		wds[7];
 	t_file	*f;
 	int		b;
 
-	getwidths(wds, files);
 	b = lsops->options & LSF_G_M;
+	ft_printf("total %lu\n", getwidths(wds, files));
 	while (files)
 	{
 		if ((f = (t_file *)files->content))
 		{
-			ft_printf("%s %*lu %{%s}%-*s  %-*s%{%s}  %*lu "
-				"%{%s}%s %2u %02u:%02u%{%s} %{%s}%#{%s}%s%{%s}",
+			ft_printf("%s %*lu %{%s}%-*s  %-*s%{%s}  %s "
+				"%{%s}%s %2u %02u:%02u %u%{%s} %{%s}%s%{%s}",
 				f->modes, wds[0], f->fst.st_nlink, (b ? "lred" : "-"), wds[1],
-				f->usr_name, wds[2], f->grp_name, (b ? "0" : "-"), wds[3],
-				f->fst.st_size, (b ? "cyan" : "-"), f->mtime->cmonth,
-				f->mtime->day, f->mtime->hour, f->mtime->min, (b ? "0" : "-"),
-				(b ? file_fg(f) : "-"), (b ? file_bg(f) : "-"), f->name,
+				f->usr_name, wds[2], f->grp_name, (b ? "0" : "-"),
+				printsize(f, wds), (b ? "cyan" : "-"), f->mtime->cmonth,
+				f->mtime->day, f->mtime->hour, f->mtime->min, f->mtime->year,
+				(b ? "0" : "-"), (b ? file_fg(f) : "-"), f->name,
 				(b ? "0" : "-"));
 			if (f->link_name[0])
 				ft_printf(" -> %s", f->link_name);
@@ -106,15 +120,15 @@ void		ls_printnormal(t_list *files, const t_lsops *lsops)
 	{
 		if ((file = (t_file *)files->content))
 		{
-			ft_printf("%{%s}%#{%s}%-*s%{%s}%s", (b ? file_fg(file) : "-"),
-					(b ? file_bg(file) : "-"), (files->next ? wds[4] : -1),
-					file->name, (b ? "0" : "-"), (files->next ? " " : ""));
-			if ((n += wds[4] + (files->next ? 1 : 0)) + wds[4] >= w.ws_col
+			if ((n += wds[4] + (files->next ? 1 : 0)) >= w.ws_col
 					&& files->next)
 			{
 				ft_printf("\n");
 				n = 0;
 			}
+			ft_printf("%{%s}%-*s%{%s}%s", (b ? file_fg(file) : "-"),
+					(files->next ? wds[4] : -1), file->name, (b ? "0" : "-"),
+					(files->next ? " " : ""));
 		}
 		files = files->next;
 	}

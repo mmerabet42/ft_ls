@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/14 22:46:39 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/16 21:22:54 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ t_lsops			*ls_getoptions(int argc, char **argv)
 
 	if (!(lsops = (t_lsops *)ft_memalloc(sizeof(t_lsops))))
 		return (NULL);
+	lsops->current = ft_timefnew(NULL);
 	i = ls_get_flags(argc, argv, lsops);
 	if (!lsops->err)
 		ls_get_files(argc, argv, i, lsops);
