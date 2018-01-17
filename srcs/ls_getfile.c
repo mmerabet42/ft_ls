@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 23:02:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/17 19:21:58 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/17 22:06:55 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 #include <errno.h>
 
 t_btree		*ls_getfiles(const char *file_name,
-						const t_lsops *lsops)
+						int hidden_files, t_cmpfunc sortfunc)
 {
 	t_btree			*bt;
 	t_btree			*tmp;
@@ -32,7 +32,7 @@ t_btree		*ls_getfiles(const char *file_name,
 
 	if (!(d = opendir(file_name)))
 	{
-		if (errno == ENOTDIR && (file = ls_getfile(file_name, lsops->current)))
+		if (errno == ENOTDIR && (file = ls_getfile(file_name)))
 			return (ft_btree_create(file, sizeof(t_file)));
 		else
 			return (NULL);
@@ -41,13 +41,13 @@ t_btree		*ls_getfiles(const char *file_name,
 	while ((ent = readdir(d)))
 	{
 		if (ent->d_name[0] != '.' ||
-				(ent->d_name[0] == '.' && lsops->options & LSF_A))
+				(ent->d_name[0] == '.' && hidden_files))
 		{
 			ft_printf_s(&final, "%s%s%s", file_name, (file_name[ft_strlen(file_name) - 1] == '/' ? "" : "/"), ent->d_name);
-			if ((file = ls_getfile(final, lsops->current)))
+			if ((file = ls_getfile(final)))
 			{
 				tmp = ft_btree_insertf(bt, ft_btree_create(file,
-							sizeof(t_file)), lsops->sortfunc);
+							sizeof(t_file)), sortfunc);
 				if (!bt)
 					bt = tmp;
 			}

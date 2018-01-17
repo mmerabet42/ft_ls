@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/17 19:22:11 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/17 23:10:18 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,15 @@
 #include <stdio.h>
 #include <errno.h>
 
-void		listfiles(t_btree *files, const t_lsops *lsops)
+static t_cmpfunc	getcmpfunc(t_lsops *lsops)
+{
+	if (lsops->options & LSF_T)
+		return (ls_cmpfile_time);
+	return (ls_cmpfile_name);
+}
+
+static void			listfiles(t_btree *files, const t_lsops *lsops,
+						t_cmpfunc sortfunc)
 {
 	t_list	*lst;
 	t_file	*file;
@@ -40,12 +48,12 @@ void		listfiles(t_btree *files, const t_lsops *lsops)
 			{
 				ft_printf("\n");
 				ft_printf("%s:\n", file->full_name);
-				files = ls_getfiles(file->full_name, lsops);
+				files = ls_getfiles(file->full_name, lsops->options & LSF_A, sortfunc);
 				if (!files)
 					ft_printf_fd(2, "ft_ls: %s: %s\n", file->name,
 							strerror(errno));
 				else
-					listfiles(files, lsops);
+					listfiles(files, lsops, sortfunc);
 			}
 			lst = lst->next;
 		}
@@ -57,6 +65,7 @@ int			main(int argc, char **argv)
 	t_lsops			*lsops;
 	t_list			*lst;
 	t_btree			*files;
+	t_cmpfunc		sortfunc;
 
 	if (!(lsops = ls_getoptions(argc, argv)))
 		return (0);
@@ -65,10 +74,12 @@ int			main(int argc, char **argv)
 				"usage: ft_ls [-%s] [file ...]\n", lsops->err, LSFLAGS);
 	else
 	{
+		sortfunc = getcmpfunc(lsops);
 		lst = (lsops->files ? ft_lstsort(lsops->files) : ft_lstcreate(".", 2));
 		while (lst)
 		{
-			files = ls_getfiles((char *)lst->content, lsops);
+			files = ls_getfiles((char *)lst->content, lsops->options & LSF_A,
+					sortfunc);
 			if (!files)
 				ft_printf_fd(2, "ft_ls: %s: %s\n", lst->content,
 						strerror(errno));
@@ -76,7 +87,7 @@ int			main(int argc, char **argv)
 			{
 				if (lst->next || lst->parent)
 					ft_printf("%s:\n", lst->content);
-				listfiles(files, lsops);
+				listfiles(files, lsops, sortfunc);
 			}
 			if (lst->next)
 				ft_putstr("\n");

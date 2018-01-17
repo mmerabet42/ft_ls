@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/17 18:36:55 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/17 23:10:19 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,6 @@
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_list.h"
-
-static void		getcmpfunc(t_lsops *lsops)
-{
-	if (lsops->options & LSF_T)
-		lsops->sortfunc = ls_cmpfile_time;
-	else
-		lsops->sortfunc = ls_cmpfile_name;
-}
 
 static int		get_flag(char c)
 {
@@ -91,7 +83,6 @@ t_lsops			*ls_getoptions(int argc, char **argv)
 		return (NULL);
 	lsops->current = ft_timefnew(NULL);
 	i = ls_get_flags(argc, argv, lsops);
-	getcmpfunc(lsops);
 	if (!lsops->err)
 		ls_get_files(argc, argv, i, lsops);
 	return (lsops);
