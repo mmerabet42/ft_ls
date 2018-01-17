@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 23:02:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/16 21:24:38 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/17 19:21:58 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,9 @@
 #include "ft_str.h"
 #include <fcntl.h>
 #include <dirent.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <errno.h>
-
-static int	ls_isfar(t_timef *a, t_timef *b)
-{
-	if (!a || !b)
-		return (0);
-	if ((int)a->month < (int)b->month - 6 || (int)a->month > (int)b->month + 6
-			|| a->year != b->year)
-		return (1);
-	return (0);
-}
 
 t_btree		*ls_getfiles(const char *file_name,
 						const t_lsops *lsops)
@@ -54,19 +45,20 @@ t_btree		*ls_getfiles(const char *file_name,
 		{
 			ft_printf_s(&final, "%s%s%s", file_name, (file_name[ft_strlen(file_name) - 1] == '/' ? "" : "/"), ent->d_name);
 			if ((file = ls_getfile(final, lsops->current)))
+			{
 				tmp = ft_btree_insertf(bt, ft_btree_create(file,
 							sizeof(t_file)), lsops->sortfunc);
+				if (!bt)
+					bt = tmp;
+			}
 			free(final);
-			if (!bt)
-				bt = tmp;
 		}
 	}
 	closedir(d);
 	return (bt);
 }
 
-t_file		*ls_getfile(const char *file_name,
-					t_timef *current_time)
+t_file		*ls_getfile(const char *file_name)
 {
 	t_file		*f;
 	struct stat	fst;
@@ -86,7 +78,8 @@ t_file		*ls_getfile(const char *file_name,
 	f->grp_name = ls_getgrpname(f->fst.st_gid);
 	f->usr_name = ls_getusrname(f->fst.st_uid);
 	f->mtime = ft_timefnew(&f->fst.st_mtime);
-	f->isfar = ls_isfar(f->mtime, current_time);
+	f->major = major(f->fst.st_rdev);
+	f->minor = minor(f->fst.st_rdev);
 	if (f->modes[0] == 'l')
 		readlink(file_name, f->link_name, 512);
 	return (f);

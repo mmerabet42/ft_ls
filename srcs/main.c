@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/16 23:27:24 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/17 19:22:11 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
-
-void		getcmpfunc(t_lsops *lsops)
-{
-	if (lsops->options & LSF_T)
-		lsops->sortfunc = ls_cmpfile_time;
-	else
-		lsops->sortfunc = ls_cmpfile_name;
-}
 
 void		listfiles(t_btree *files, const t_lsops *lsops)
 {
@@ -60,28 +52,20 @@ void		listfiles(t_btree *files, const t_lsops *lsops)
 	}
 }
 
-void lstiter(t_list *lst)
-{
-	ft_printf("%s\n", lst->content);
-}
-
 int			main(int argc, char **argv)
 {
 	t_lsops			*lsops;
 	t_list			*lst;
 	t_btree			*files;
-	int				file_size;
 
 	if (!(lsops = ls_getoptions(argc, argv)))
 		return (0);
 	if (lsops->err)
 		ft_printf_fd(2, "ft_ls: illegal option -- %c\n"
-				"usage: ls [-%s] [file ...]\n", lsops->err, LSFLAGS);
+				"usage: ft_ls [-%s] [file ...]\n", lsops->err, LSFLAGS);
 	else
 	{
 		lst = (lsops->files ? ft_lstsort(lsops->files) : ft_lstcreate(".", 2));
-		getcmpfunc(lsops);
-		file_size = ft_lstsize(lst);
 		while (lst)
 		{
 			files = ls_getfiles((char *)lst->content, lsops);

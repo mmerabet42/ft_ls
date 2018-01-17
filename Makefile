@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/01/16 20:40:27 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/01/17 18:56:20 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ LIBFT		=	$(LIBFTD)/libft.a
 
 _FT_LSS	=		main.c ls_getoptions.c ls_getmodes.c ls_getnames.c \
 				ls_getfile.c ls_cmpfile.c ls_formatfiles.c \
+				ls_printlong.c ls_printnormal.c \
 
 SRCD		=	srcs
 ICLD		=	-Iincludes -I$(LIBFTD)/includes

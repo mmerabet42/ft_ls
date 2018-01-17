@@ -6,12 +6,13 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/13 22:50:33 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/14 18:23:09 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/17 16:21:41 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 #include "ft_str.h"
+#include "ft_printf.h"
 
 int	ls_cmpfile_name(const void *a, const void *b, size_t n)
 {
