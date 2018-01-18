@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/17 23:10:21 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/18 19:17:54 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 # define LSF_T		16
 # define LSF_G_M	32
 # define LSF_1		64
-# define LSFLAGS "lRartG1"
+# define LSF_T_M	128
+# define LSFLAGS	"lRartG1T"
 
 typedef struct		s_lsops
 {

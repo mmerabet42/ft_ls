@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/17 23:10:19 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/18 14:24:12 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,19 @@
 #include "ft_str.h"
 #include "ft_mem.h"
 #include "ft_list.h"
+#include "ft_math.h"
 
 static int		get_flag(char c)
 {
+	static int	lsfs_size = sizeof(LSFLAGS);
+	int			i;
+
+	i = -1;
+	while (++i < lsfs_size)
+		if (LSFLAGS[i] == c)
+			return (ft_pow(2, i));
+	return (0);
+/*
 	if (c == 'l')
 		return (LSF_L);
 	else if (c == 'R')
@@ -31,6 +41,8 @@ static int		get_flag(char c)
 		return (LSF_G_M);
 	else if (c == '1')
 		return (LSF_1);
+	else if (c == 'T')
+		return (LSF_T_M);*/
 	return (0);
 }
 
@@ -38,6 +50,7 @@ static int		ls_get_flags(int argc, char **argv, t_lsops *lsops)
 {
 	int	i;
 	int	j;
+	int	flag;
 
 	i = 1;
 	while (i < argc)
@@ -47,9 +60,9 @@ static int		ls_get_flags(int argc, char **argv, t_lsops *lsops)
 			j = 1;
 			while (argv[i][j])
 			{
-				if (ft_strpbrk_pos(&argv[i][j], LSFLAGS) != 0)
+				if (!(flag = get_flag(argv[i][j])))
 					return ((int)(lsops->err = argv[i][j]));
-				lsops->options |= get_flag(argv[i][j]);
+				lsops->options |= flag;
 				++j;
 			}
 		}

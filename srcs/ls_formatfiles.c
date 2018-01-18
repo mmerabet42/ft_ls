@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/17 21:56:49 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/18 19:17:46 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,30 +26,29 @@ int				ls_isfar(t_timef *a, t_timef *b)
 	return (0);
 }
 
-unsigned long	ls_getwidths(int widths[7], t_list *lst)
+unsigned long	ls_getwidths(int ws[8], t_list *lst)
 {
 	t_list			*it;
-	t_file			*file;
+	t_file			*f;
 	unsigned long	blks;
 
-	ft_bzero(widths, sizeof(int) * 7);
+	ft_bzero(ws, sizeof(int) * 8);
 	it = lst;
 	blks = 0;
 	while (it)
 	{
-		if ((file = (t_file *)it->content))
-		{
-			widths[0] = ft_max(widths[0], ft_uintlen(file->fst.st_nlink));
-			widths[1] = ft_max(widths[1],
-					ft_strlen(file->usr_name ? file->usr_name : "(null)"));
-			widths[2] = ft_max(widths[2],
-					ft_strlen(file->grp_name ? file->grp_name : "(null)"));
-			widths[3] = ft_max(widths[3], ft_uintlen(file->fst.st_size));
-			widths[4] = ft_max(widths[4], ft_strlen(file->name));
-			widths[5] = ft_max(widths[5], ft_uintlen(file->major));
-			widths[6] = ft_max(widths[6], ft_uintlen(file->minor));
-			blks += file->fst.st_blocks;
-		}
+		f = (t_file *)it->content;
+		ws[0] = ft_max(ws[0], ft_uintlen(f->fst.st_nlink));
+		ws[1] = ft_max(ws[1], ft_strlen(f->usr_name ? f->usr_name : "(null)"));
+		ws[2] = ft_max(ws[2], ft_strlen(f->grp_name ? f->grp_name : "(null)"));
+		ws[3] = ft_max(ws[3], ft_uintlen(f->fst.st_size));
+		ws[4] = ft_max(ws[4], ft_strlen(f->name));
+		ws[5] = ft_max(ws[5], ft_uintlen(f->major));
+		ws[6] = ft_max(ws[6], ft_uintlen(f->minor));
+		if (f->modes[0] == 'c' || f->modes[0] == 'b')
+			ws[7] = 8;
+		ws[7] = ft_max(ws[7], ws[3]);
+		blks += f->fst.st_blocks;
 		it = it->next;
 	}
 	return (blks);
@@ -65,7 +64,7 @@ char			*ls_file_fg(t_file *file)
 	else if (file->modes[0] == 'l')
 		return ("lyellow");
 	else if (file->modes[0] == 'c' || file->modes[0] == 'b')
-		return ("blue");
+		return ("black");
 	else if (file->name[0] == '.')
 		return ("lblue");
 	return ("white");
