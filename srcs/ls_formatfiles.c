@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/18 19:17:46 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/18 22:31:34 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ int				ls_isfar(t_timef *a, t_timef *b)
 {
 	if (!a || !b)
 		return (0);
-	if ((int)a->month < (int)b->month - 6 || (int)a->month > (int)b->month + 6)
+	if ((int)a->year != (int)b->year - 1 && (int)a->year > (int)b->year + 1)
 		return (1);
+	ft_printf("HELLO");
 	return (0);
 }
 
@@ -73,8 +74,8 @@ char			*ls_file_fg(t_file *file)
 char			*ls_file_bg(t_file *file)
 {
 	if (file->modes[0] == 'c')
-		return ("yellow");
+		return ("lyellow");
 	else if (file->modes[0] == 'b')
-		return ("cyan");
+		return ("lcyan");
 	return ("-");
 }

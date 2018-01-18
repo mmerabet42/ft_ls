@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/18 19:17:54 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/18 22:31:39 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@
 # include "ft_btree.h"
 # include "ft_time.h"
 
-# define LSF_L		1
-# define LSF_R_M	2
-# define LSF_A		4
-# define LSF_R		8
-# define LSF_T		16
-# define LSF_G_M	32
-# define LSF_1		64
-# define LSF_T_M	128
+# define LSF_L		(1 << 0)
+# define LSF_R_M	(1 << 1)
+# define LSF_A		(1 << 2)
+# define LSF_R		(1 << 3)
+# define LSF_T		(1 << 4)
+# define LSF_G_M	(1 << 5)
+# define LSF_1		(1 << 6)
+# define LSF_T_M	(1 << 7)
 # define LSFLAGS	"lRartG1T"
 
 typedef struct		s_lsops

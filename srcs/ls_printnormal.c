@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:46:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/17 19:04:20 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/18 20:45:38 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-static void	printline(t_list *files, t_file *file, int wds[7],
+static void	printline(t_list *files, t_file *file, int wds[8],
 				const t_lsops *lsops)
 {
 	int	b;
@@ -31,7 +31,7 @@ static void	printline(t_list *files, t_file *file, int wds[7],
 
 void		ls_printnormal(t_list *files, const t_lsops *lsops)
 {
-	int				wds[7];
+	int				wds[8];
 	struct winsize	w;
 	int				n;
 

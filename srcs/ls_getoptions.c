@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/18 14:24:12 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/18 22:01:51 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,7 @@ static int		get_flag(char c)
 	i = -1;
 	while (++i < lsfs_size)
 		if (LSFLAGS[i] == c)
-			return (ft_pow(2, i));
-	return (0);
-/*
-	if (c == 'l')
-		return (LSF_L);
-	else if (c == 'R')
-		return (LSF_R_M);
-	else if (c == 'a')
-		return (LSF_A);
-	else if (c == 'r')
-		return (LSF_R);
-	else if (c == 't')
-		return (LSF_T);
-	else if (c == 'G')
-		return (LSF_G_M);
-	else if (c == '1')
-		return (LSF_1);
-	else if (c == 'T')
-		return (LSF_T_M);*/
+			return (1 << i);
 	return (0);
 }
 
@@ -52,23 +34,21 @@ static int		ls_get_flags(int argc, char **argv, t_lsops *lsops)
 	int	j;
 	int	flag;
 
-	i = 1;
-	while (i < argc)
+	i = 0;
+	while (++i < argc)
 	{
 		if (argv[i][0] == '-')
 		{
-			j = 1;
-			while (argv[i][j])
+			j = 0;
+			while (argv[i][++j])
 			{
 				if (!(flag = get_flag(argv[i][j])))
 					return ((int)(lsops->err = argv[i][j]));
 				lsops->options |= flag;
-				++j;
 			}
 		}
 		else
-			break;
-		++i;
+			break ;
 	}
 	return (i);
 }
