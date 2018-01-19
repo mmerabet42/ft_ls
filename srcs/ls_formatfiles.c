@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/18 22:31:34 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/19 17:36:04 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,17 @@
 
 int				ls_isfar(t_timef *a, t_timef *b)
 {
+	int	fa;
+	int	fb;
+	int	m;
+
 	if (!a || !b)
 		return (0);
-	if ((int)a->year != (int)b->year - 1 && (int)a->year > (int)b->year + 1)
+	m = (int)a->year - (int)b->year;
+	fa = (int)a->month + (m > 0 ? 12 * ft_abs(m) : 0);
+	fb = (int)b->month + (m < 0 ? 12 * ft_abs(m) : 0);
+	if (fa - fb > 6 || fa - fb < -6)
 		return (1);
-	ft_printf("HELLO");
 	return (0);
 }
 
@@ -42,7 +48,7 @@ unsigned long	ls_getwidths(int ws[8], t_list *lst)
 		ws[0] = ft_max(ws[0], ft_uintlen(f->fst.st_nlink));
 		ws[1] = ft_max(ws[1], ft_strlen(f->usr_name ? f->usr_name : "(null)"));
 		ws[2] = ft_max(ws[2], ft_strlen(f->grp_name ? f->grp_name : "(null)"));
-		ws[3] = ft_max(ws[3], ft_uintlen(f->fst.st_size));
+		ws[3] = ft_max(ws[3], ft_ulonglen(f->fst.st_size));
 		ws[4] = ft_max(ws[4], ft_strlen(f->name));
 		ws[5] = ft_max(ws[5], ft_uintlen(f->major));
 		ws[6] = ft_max(ws[6], ft_uintlen(f->minor));

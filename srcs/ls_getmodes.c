@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:48 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/11 22:49:29 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/19 16:38:03 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	check_group_rights(mode_t st_mode, char *buffer)
 		buffer[4] = 'r';
 	if (st_mode & S_IWGRP)
 		buffer[5] = 'w';
-	if (st_mode & S_IXUSR)
+	if (st_mode & S_IXGRP)
 	{
 		if (st_mode & S_ISGID)
 			buffer[6] = 's';
@@ -97,7 +97,9 @@ void		ls_getmodes(struct stat file_stat, const char *path, char *buffer)
 	check_other_rights(file_stat.st_mode, buffer);
 	if (listxattr(path, NULL, 0, XATTR_NOFOLLOW) > 0)
 		buffer[10] = '@';
-	if ((acl = acl_get_file(path, ACL_TYPE_EXTENDED)))
+	else if ((acl = acl_get_file(path, ACL_TYPE_EXTENDED)))
+	{
 		buffer[10] = '+';
-	acl_free((void *)acl);
+		acl_free((void *)acl);
+	}
 }

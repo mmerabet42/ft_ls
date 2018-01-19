@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:45:48 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/18 22:05:11 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/19 21:09:59 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*getsize(t_file *file, int widths[8])
 		ft_printf_s(&final, "%*u, %*u", 3, file->major,
 				3, file->minor);
 	else
-		ft_printf_s(&final, "%*u", widths[3], file->fst.st_size);
+		ft_printf_s(&final, "%*lu", widths[3], file->fst.st_size);
 	return (final);
 }
 

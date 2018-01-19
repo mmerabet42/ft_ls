@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/18 22:31:39 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/19 18:40:00 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,13 @@ typedef struct		s_file
 }					t_file;
 
 t_lsops				*ls_getoptions(int argc, char **argv);
-t_file				*ls_getfile(const char *file_name);
-t_btree				*ls_getfiles(const char *file_name,
+
+t_file				*ls_getfile(const char *path);
+t_btree				*ls_getfiles(const char *path,
 							int hidden_files,
 							t_cmpfunc sortfunc);
-void				ls_filedel(t_file *f);
+
+void				ls_filedel(t_file **file);
 void				ls_getmodes(struct stat file_stat,
 							const char *path,
 							char *buffer);
