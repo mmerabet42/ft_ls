@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 23:02:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/19 21:12:37 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/20 21:45:50 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 static char		*getfullpath(const char *path, const char *file_name)
 {
-	static char	*final;
+	char		*final;
 	char		lastchar;
 
 	lastchar = path[ft_strlen(path) - 1];
@@ -38,19 +38,22 @@ static t_btree	*ls_readdir(const char *path,
 	t_btree			*tmp;
 	t_file			*file;
 	struct dirent	*ent;
+	char			*fullpath;
 
 	bt = NULL;
 	while ((ent = readdir(dir)))
 	{
 		if (ent->d_name[0] != '.' || (ent->d_name[0] == '.' && hidden_files))
 		{
-			if ((file = ls_getfile(getfullpath(path, ent->d_name))))
+			fullpath = getfullpath(path, ent->d_name);
+			if ((file = ls_getfile(fullpath)))
 			{
 				tmp = ft_btree_insertf(bt,
 						ft_btree_create(file, sizeof(t_file)), sortfunc);
 				if (!bt)
 					bt = tmp;
 			}
+			free(fullpath);
 		}
 	}
 	return (bt);
@@ -102,7 +105,7 @@ t_file			*ls_getfile(const char *path)
 	return (f);
 }
 
-void		ls_filedel(t_file **file)
+void			ls_filedel(t_file **file)
 {
 	free((*file)->name);
 	free((*file)->full_name);

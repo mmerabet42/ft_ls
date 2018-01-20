@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/19 17:36:04 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/20 19:52:26 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 #include "ft_math.h"
 #include "ft_types.h"
 #include "ft_str.h"
-#include "ft_printf.h"
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 int				ls_isfar(t_timef *a, t_timef *b)
 {
@@ -33,32 +34,38 @@ int				ls_isfar(t_timef *a, t_timef *b)
 	return (0);
 }
 
-unsigned long	ls_getwidths(int ws[8], t_list *lst)
+static void		iter_getwidths(t_btree *bt, t_print_info *pinfo)
 {
-	t_list			*it;
-	t_file			*f;
-	unsigned long	blks;
+	t_file	*f;
 
-	ft_bzero(ws, sizeof(int) * 8);
-	it = lst;
-	blks = 0;
-	while (it)
-	{
-		f = (t_file *)it->content;
-		ws[0] = ft_max(ws[0], ft_uintlen(f->fst.st_nlink));
-		ws[1] = ft_max(ws[1], ft_strlen(f->usr_name ? f->usr_name : "(null)"));
-		ws[2] = ft_max(ws[2], ft_strlen(f->grp_name ? f->grp_name : "(null)"));
-		ws[3] = ft_max(ws[3], ft_ulonglen(f->fst.st_size));
-		ws[4] = ft_max(ws[4], ft_strlen(f->name));
-		ws[5] = ft_max(ws[5], ft_uintlen(f->major));
-		ws[6] = ft_max(ws[6], ft_uintlen(f->minor));
-		if (f->modes[0] == 'c' || f->modes[0] == 'b')
-			ws[7] = 8;
-		ws[7] = ft_max(ws[7], ws[3]);
-		blks += f->fst.st_blocks;
-		it = it->next;
-	}
-	return (blks);
+	f = (t_file *)bt->content;
+	pinfo->widths[0] = ft_max(pinfo->widths[0], ft_uintlen(f->fst.st_nlink));
+	pinfo->widths[1] = ft_max(pinfo->widths[1],
+			ft_strlen(f->usr_name ? f->usr_name : "(null)"));
+	pinfo->widths[2] = ft_max(pinfo->widths[2],
+			ft_strlen(f->grp_name ? f->grp_name : "(null)"));
+	pinfo->widths[3] = ft_max(pinfo->widths[3], ft_ulonglen(f->fst.st_size));
+	pinfo->widths[4] = ft_max(pinfo->widths[4], ft_strlen(f->name));
+	pinfo->widths[5] = ft_max(pinfo->widths[5], ft_uintlen(f->major));
+	pinfo->widths[6] = ft_max(pinfo->widths[6], ft_uintlen(f->minor));
+	if (f->modes[0] == 'c' || f->modes[0] == 'b')
+		pinfo->widths[7] = 8;
+	pinfo->widths[7] = ft_max(pinfo->widths[7], pinfo->widths[3]);
+	pinfo->blocks += f->fst.st_blocks;
+}
+
+void			ls_getinfos(t_btree *files, const t_lsops *lsops,
+						t_print_info *pinfo)
+{
+	struct winsize	w;
+
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	ft_bzero(pinfo, sizeof(t_print_info));
+	pinfo->files = files;
+	pinfo->last_file = ft_btree_right(files);
+	pinfo->lsops = lsops;
+	pinfo->ws_col = w.ws_col;
+	ft_btree_iter_d(files, (void(*)(t_btree *, void *))iter_getwidths, pinfo);
 }
 
 char			*ls_file_fg(t_file *file)

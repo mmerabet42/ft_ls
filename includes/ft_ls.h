@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/19 18:40:00 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/20 23:08:06 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct		s_lsops
 	int				options;
 	t_list			*files;
 	t_timef			*current;
+	t_cmpfunc		sortfunc;
 }					t_lsops;
 
 typedef struct		s_file
@@ -52,7 +53,21 @@ typedef struct		s_file
 	t_btree			*files;
 }					t_file;
 
-t_lsops				*ls_getoptions(int argc, char **argv);
+typedef struct		s_print_info
+{
+	int				widths[8];
+	int				ws_col;
+	int				n;
+	unsigned long	blocks;
+	const t_btree	*files;
+	const t_btree	*last_file;
+	const t_lsops	*lsops;
+}					t_print_info;
+
+t_lsops				*ls_getlsops(int argc, char **argv);
+void				ls_lsopsdel(t_lsops **lsops);
+
+void				ls_listfiles(t_btree *files, const t_lsops *lsops);
 
 t_file				*ls_getfile(const char *path);
 t_btree				*ls_getfiles(const char *path,
@@ -68,10 +83,12 @@ char				*ls_getusrname(uid_t uid);
 
 char				*ls_file_fg(t_file *file);
 char				*ls_file_bg(t_file *file);
-unsigned long		ls_getwidths(int widths[7], t_list *files);
+void				ls_getinfos(t_btree *files,
+							const t_lsops *lsops,
+							t_print_info *pinfo);
 
-void				ls_printlong(t_list *files, const t_lsops *lsops);
-void				ls_printnormal(t_list *file, const t_lsops *lsops);
+void				ls_printlong(t_btree *files, const t_lsops *lsops);
+void				ls_printnormal(t_btree *file, const t_lsops *lsops);
 
 int					ls_isfar(t_timef *a, t_timef *b);
 

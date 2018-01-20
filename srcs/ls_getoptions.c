@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/19 16:24:05 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/20 23:08:02 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,14 @@
 #include "ft_list.h"
 #include "ft_math.h"
 
-static int		get_flag(char c)
+static t_cmpfunc	getcmpfunc(t_lsops *lsops)
+{
+	if (lsops->options & LSF_T)
+		return (ls_cmpfile_time);
+	return (ls_cmpfile_name);
+}
+
+static int			get_flag(char c)
 {
 	static int	lsfs_size = sizeof(LSFLAGS);
 	int			i;
@@ -28,7 +35,7 @@ static int		get_flag(char c)
 	return (0);
 }
 
-static int		ls_get_flags(int argc, char **argv, t_lsops *lsops)
+static int			ls_get_flags(int argc, char **argv, t_lsops *lsops)
 {
 	int	i;
 	int	j;
@@ -53,7 +60,8 @@ static int		ls_get_flags(int argc, char **argv, t_lsops *lsops)
 	return (i);
 }
 
-static void		ls_get_files(int argc, char **argv, int istart, t_lsops *lsops)
+static void			ls_get_files(int argc, char **argv, int istart,
+							t_lsops *lsops)
 {
 	t_list	*tmp;
 
@@ -65,9 +73,13 @@ static void		ls_get_files(int argc, char **argv, int istart, t_lsops *lsops)
 			lsops->files = tmp;
 		++istart;
 	}
+	if (!lsops->files)
+		lsops->files = ft_lstcreate(".", 2);
+	else
+		lsops->files = ft_lstsort(lsops->files);
 }
 
-t_lsops			*ls_getoptions(int argc, char **argv)
+t_lsops				*ls_getlsops(int argc, char **argv)
 {
 	t_lsops	*lsops;
 	int		i;
@@ -76,7 +88,15 @@ t_lsops			*ls_getoptions(int argc, char **argv)
 		return (NULL);
 	lsops->current = ft_timefnew(NULL);
 	i = ls_get_flags(argc, argv, lsops);
+	lsops->sortfunc = getcmpfunc(lsops);
 	if (!lsops->err)
 		ls_get_files(argc, argv, i, lsops);
 	return (lsops);
+}
+
+void				ls_lsopsdel(t_lsops **lsops)
+{
+	ft_lstdel(&(*lsops)->files, NULL);
+	ft_timefdel(&(*lsops)->current);
+	ft_memdel((void **)lsops);
 }

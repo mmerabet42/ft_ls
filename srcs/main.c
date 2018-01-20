@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/19 22:39:39 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/20 23:08:04 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,6 @@
 #include <stdio.h>
 #include <errno.h>
 
-static t_cmpfunc	getcmpfunc(t_lsops *lsops)
-{
-	if (lsops->options & LSF_T)
-		return (ls_cmpfile_time);
-	return (ls_cmpfile_name);
-}
-
 static void			filesdel(void *content, size_t n)
 {
 	t_file	*file;
@@ -34,95 +27,75 @@ static void			filesdel(void *content, size_t n)
 	ls_filedel(&file);
 }
 
-static void			listfiles(t_btree *files, const t_lsops *lsops,
-						t_cmpfunc sortfunc)
+static void			rlistfiles(t_btree *bt, const t_lsops *lsops)
 {
-	t_list	*lst;
 	t_file	*file;
+	t_btree	*files;
 
-	if (!files || !lsops)
-		return ;
-	lst = (lsops->options & LSF_R ? ft_btree_tolistv(files) :
-			ft_btree_tolist(files));
-	if (lsops->options & LSF_L)
-		ls_printlong(lst, lsops);
-	else
-		ls_printnormal(lst, lsops);
-	if (lsops->options & LSF_R_M)
+	if ((file = (t_file *)bt->content) && file->modes[0] == 'd'
+			&& !(ft_strequ(file->name, ".") || ft_strequ(file->name, "..")))
 	{
-		while (lst)
-		{
-			if ((file = (t_file *)lst->content) && file->modes[0] == 'd'
-					&& !(ft_strequ(file->name, ".") || ft_strequ(file->name, "..")))
-			{
-				ft_printf("\n%s:\n", file->full_name);
-				if (!(files = ls_getfiles(file->full_name,
-							lsops->options & LSF_A, sortfunc)) && errno != 0)
-					ft_printf_fd(2, "ft_ls: %s: %lu %s\n", file->name,
-							errno, strerror(errno));
-				else if (files)
-					listfiles(files, lsops, sortfunc);
-				ft_btree_del(&files, NULL);
-			}
-			lst = lst->next;
-		}
+		ft_printf("\n%s:\n", file->full_name);
+		if (!(files = ls_getfiles(file->full_name,
+						lsops->options & LSF_A, lsops->sortfunc)) && errno != 0)
+			ft_printf_fd(2, "ft_ls: %s: %s\n", file->name,
+					strerror(errno));
+		else if (files)
+			ls_listfiles(files, lsops);
 	}
-	ft_lstdel(&lst, filesdel);
 }
 
-void btiter(t_btree *bt, void *data)
+void				ls_listfiles(t_btree *files, const t_lsops *lsops)
 {
-	ft_printf("DATA %d : %s\n", (*(int *)data)++, bt->content);
+	if (!files || !lsops)
+		return ;
+	if (lsops->options & LSF_L)
+		ls_printlong(files, lsops);
+	else
+		ls_printnormal(files, lsops);
+	if (lsops->options & LSF_R_M)
+	{
+		 if (lsops->options & LSF_R)
+			ft_btree_iterv_d(files, (void(*)(t_btree *, void *))rlistfiles,
+					(void *)lsops);
+		else
+			ft_btree_iter_d(files, (void(*)(t_btree *, void *))rlistfiles,
+					(void *)lsops);
+	}
+	ft_btree_del(&files, filesdel);
 }
 
 int			main(int argc, char **argv)
 {
-	t_btree	*bt = NULL, *tmp;
-	int	i = 1;
-	while (i < argc)
-	{
-		tmp = ft_btree_insert(bt, ft_btree_create(argv[i], ft_strlen(argv[i]) + 1));
-		if (!bt)
-			bt = tmp;
-		++i;
-	}
-	int data = 0;
-	ft_btree_iter_d(bt, btiterm &data);
-	return (0);
 	t_lsops			*lsops;
-	t_list			*lst;
 	t_btree			*files;
-	t_cmpfunc		sortfunc;
+	t_list			*lst;
 
-	if (!(lsops = ls_getoptions(argc, argv)))
+	if (!(lsops = ls_getlsops(argc, argv)))
 		return (0);
-	lst = NULL;
 	if (lsops->err)
 		ft_printf_fd(2, "ft_ls: illegal option -- %c\n"
 				"usage: ft_ls [-%s] [file ...]\n", lsops->err, LSFLAGS);
 	else
 	{
-		sortfunc = getcmpfunc(lsops);
-		lst = (lsops->files ? ft_lstsort(lsops->files) : ft_lstcreate(".", 2));
+		lst = lsops->files;
 		while (lst)
 		{
 			if (!(files = ls_getfiles((char *)lst->content,
-							lsops->options & LSF_A, sortfunc)) && errno != 0)
-				ft_printf_fd(2, "ft_ls: %s: %lu %s\n", lst->content,
-						errno, strerror(errno));
+							lsops->options & LSF_A, lsops->sortfunc)) && errno != 0)
+				ft_printf_fd(2, "ft_ls: %s: %s\n", lst->content,
+						strerror(errno));
 			else if (files)
 			{
 				if (lst->next || lst->parent)
 					ft_printf("%s:\n", lst->content);
-				listfiles(files, lsops, sortfunc);
+				ls_listfiles(files, lsops);
 			}
 			if ((lst = lst->next))
 				ft_putstr("\n");
-			ft_btree_del(&files, NULL);
 		}
 		ft_timefdel(&lsops->current);
 	}
-	ft_lstdel(&lst, NULL);
-	free(lsops);
+	ls_freelsops(&lsops);
 	return (0);
 }
