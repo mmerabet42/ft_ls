@@ -6,12 +6,14 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/21 17:57:04 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/21 20:34:32 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-#include "libft.h"
+#include "ft_printf_ext.h"
+#include "ft_printf.h"
+#include "ft_str.h"
 #include <fcntl.h>
 #include <time.h>
 #include <string.h>
@@ -84,7 +86,7 @@ static void	ft_ls(const t_lsops *lsops)
 			ls_listfiles(files, lsops);
 		}
 		if ((lst = lst->next))
-			ft_putstr("\n");
+			ft_printf("\n");
 	}
 }
 
@@ -100,5 +102,6 @@ int			main(int argc, char **argv)
 	else
 		ft_ls(lsops);
 	ls_lsopsdel(&lsops);
+	ft_printf_free_formats();
 	return (0);
 }
