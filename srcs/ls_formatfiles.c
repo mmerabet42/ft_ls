@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/20 19:52:26 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/21 17:57:02 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ char			*ls_file_fg(t_file *file)
 		return ("lyellow");
 	else if (file->modes[0] == 'c' || file->modes[0] == 'b')
 		return ("black");
+	else if (file->modes[0] == 's' || file->modes[0] == 'p')
+		return ("pink");
 	else if (file->name[0] == '.')
 		return ("lblue");
 	return ("white");

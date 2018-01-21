@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/20 23:08:02 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/21 17:49:35 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int			get_flag(char c)
 	return (0);
 }
 
-static int			ls_get_flags(int argc, char **argv, t_lsops *lsops)
+static int			get_flags(int argc, char **argv, t_lsops *lsops)
 {
 	int	i;
 	int	j;
@@ -60,7 +60,7 @@ static int			ls_get_flags(int argc, char **argv, t_lsops *lsops)
 	return (i);
 }
 
-static void			ls_get_files(int argc, char **argv, int istart,
+static void			get_files(int argc, char **argv, int istart,
 							t_lsops *lsops)
 {
 	t_list	*tmp;
@@ -87,16 +87,9 @@ t_lsops				*ls_getlsops(int argc, char **argv)
 	if (!(lsops = (t_lsops *)ft_memalloc(sizeof(t_lsops))))
 		return (NULL);
 	lsops->current = ft_timefnew(NULL);
-	i = ls_get_flags(argc, argv, lsops);
+	i = get_flags(argc, argv, lsops);
 	lsops->sortfunc = getcmpfunc(lsops);
 	if (!lsops->err)
-		ls_get_files(argc, argv, i, lsops);
+		get_files(argc, argv, i, lsops);
 	return (lsops);
-}
-
-void				ls_lsopsdel(t_lsops **lsops)
-{
-	ft_lstdel(&(*lsops)->files, NULL);
-	ft_timefdel(&(*lsops)->current);
-	ft_memdel((void **)lsops);
 }
