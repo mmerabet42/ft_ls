@@ -6,12 +6,14 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 22:49:41 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/21 17:36:08 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/21 22:11:28 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 #include "ft_mem.h"
+#include "ft_str.h"
+#include "ft_types.h"
 #include <grp.h>
 #include <pwd.h>
 
@@ -22,7 +24,9 @@ char	*ls_getgrpname(gid_t gid)
 
 	nm = NULL;
 	if ((grp = getgrgid(gid)))
-		nm = grp->gr_name;
+		nm = ft_strdup(grp->gr_name);
+	else
+		nm = ft_uitoa(gid);
 	return (nm);
 }
 
@@ -33,7 +37,9 @@ char	*ls_getusrname(uid_t uid)
 
 	nm = NULL;
 	if ((usr = getpwuid(uid)))
-		nm = usr->pw_name;
+		nm = ft_strdup(usr->pw_name);
+	else
+		nm = ft_uitoa(uid);
 	return (nm);
 }
 

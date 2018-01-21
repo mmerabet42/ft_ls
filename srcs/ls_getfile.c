@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 23:02:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/21 20:25:04 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/21 23:14:56 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ void			ls_filedel(t_file **file)
 {
 	free((*file)->name);
 	free((*file)->full_name);
+	free((*file)->usr_name);
+	free((*file)->grp_name);
 	ft_timefdel(&(*file)->mtime);
 	ft_memdel((void **)file);
 }

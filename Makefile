@@ -6,13 +6,13 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/01/19 22:35:34 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/01/21 22:58:35 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		=	ft_ls
 CC			=	gcc
-CFLAGS		=	-Wall -Werror -Wextra
+CFLAGS		=	-Wall -Werror -Wextra -Ofast
 
 LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
@@ -45,8 +45,6 @@ _WHITE=\x1b[37m
 _END=\x1b[0m
 _SUCCESS=$(_RED)
 
-.PHONY: all clean fclean re
-
 all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJS)
@@ -57,7 +55,7 @@ $(NAME): $(OBJS)
 	@echo  "$(NAME) : $(_SUCCESS)done$(_END)"
 
 $(LIBFT):
-	@make -j3 -C $(LIBFTD)
+	@make -C $(LIBFTD)
 
 %.o: %.c
 	@$(CC) -c -o $@ $< $(ICLD) $(CFLAGS)
@@ -72,4 +70,8 @@ fclean: clean
 	@echo "$(_RED)Cleaning$(_END) : $(NAME)"
 	@/bin/rm -f $(NAME)
 
-re: fclean all
+re:
+	@make fclean
+	@make
+
+.PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/21 20:34:32 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/21 23:14:58 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ static void	rlistfiles(t_btree *bt, const t_lsops *lsops)
 		else if (files)
 			ls_listfiles(files, lsops);
 	}
+	errno = 0;
 }
 
 void		ls_listfiles(t_btree *files, const t_lsops *lsops)
