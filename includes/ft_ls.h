@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/23 19:17:48 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 22:33:33 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@
 # define LSF_S_M	(1 << 9)
 # define LSF_U_M	(1 << 10)
 # define LSF_U		(1 << 11)
-# define LSFLAGS	"lRartG1TDSUu"
+# define LSF_G		(1 << 12)
+# define LSFLAGS	"lRartG1TDSUug"
 
 typedef struct		s_lsops
 {
@@ -72,9 +73,9 @@ typedef struct		s_print_info
 
 typedef struct		s_locale_color
 {
-I	char			*fg[12];
+	char			*fg[12];
 	char			*bg[12];
-}					t_local_color;
+}					t_locale_color;
 
 t_lsops				*ls_getlsops(int argc, char **argv);
 void				ls_lsopsdel(t_lsops **lsops);
@@ -95,6 +96,8 @@ char				*ls_getusrname(uid_t uid);
 
 char				*ls_file_fg(t_file *file);
 char				*ls_file_bg(t_file *file);
+void				ls_setlocale_color(const char *code);
+
 void				ls_getinfos(t_btree *files,
 							const t_lsops *lsops,
 							t_print_info *pinfo);

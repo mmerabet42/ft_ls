@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/23 19:17:47 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 22:33:31 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,21 +94,32 @@ static void	ft_ls(const t_lsops *lsops)
 ** 0;255;145
 ** 85;226;165
 */
-#include <stdio.h>
-#include <locale.h>
-#include <stdlib.h>
+
 int			main(int argc, char **argv, char **envp)
 {
 	t_lsops			*lsops;
 
-	(void)envp;
 	if (!(lsops = ls_getlsops(argc, argv)))
 		return (0);
 	if (lsops->err)
 		ft_printf_fd(2, "ft_ls: illegal option -- %c\n"
 				"usage: ft_ls [-%s] [file ...]\n", lsops->err, LSFLAGS);
 	else
+	{
+		if (lsops->options & LSF_G)
+		{
+			while (*envp)
+			{
+				if (ft_strmatch(*envp, "LSCOLORS=*"))
+				{
+					ls_setlocale_color(ft_strchr(*envp, '=') + 1);
+					break ;
+				}
+				++envp;
+			}
+		}
 		ft_ls(lsops);
+	}
 	ls_lsopsdel(&lsops);
 	ft_printf_free_formats();
 	return (0);
