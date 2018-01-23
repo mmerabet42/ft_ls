@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/21 17:49:35 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 16:44:33 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,16 @@
 
 static t_cmpfunc	getcmpfunc(t_lsops *lsops)
 {
-	if (lsops->options & LSF_T)
-		return (ls_cmpfile_time);
+	if (lsops->options & LSF_S_M)
+		return (ls_cmpfile_size);
+	else if (lsops->options & LSF_T)
+	{
+		if (lsops->options & LSF_U_M)
+			return (ls_cmpfile_btime);
+		else if (lsops->options & LSF_U)
+			return (ls_cmpfile_atime);
+		return (ls_cmpfile_mtime);
+	}
 	return (ls_cmpfile_name);
 }
 

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 23:02:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/21 23:14:56 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 18:38:44 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ t_file			*ls_getfile(const char *path)
 	f->grp_name = ls_getgrpname(f->fst.st_gid);
 	f->usr_name = ls_getusrname(f->fst.st_uid);
 	f->mtime = ft_timefnew(&f->fst.st_mtime);
+	f->atime = ft_timefnew(&f->fst.st_atime);
+	f->btime = ft_timefnew(&f->fst.st_birthtime);
 	f->major = major(f->fst.st_rdev);
 	f->minor = minor(f->fst.st_rdev);
 	if (f->modes[0] == 'l')
@@ -112,5 +114,7 @@ void			ls_filedel(t_file **file)
 	free((*file)->usr_name);
 	free((*file)->grp_name);
 	ft_timefdel(&(*file)->mtime);
+	ft_timefdel(&(*file)->atime);
+	ft_timefdel(&(*file)->btime);
 	ft_memdel((void **)file);
 }

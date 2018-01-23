@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/13 22:50:33 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/18 15:02:09 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 16:19:21 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,52 @@ int	ls_cmpfile_name(const void *a, const void *b, size_t n)
 	return (ft_strcmp(((t_file *)a)->name, ((t_file *)b)->name));
 }
 
-int	ls_cmpfile_time(const void *a, const void *b, size_t n)
+int	ls_cmpfile_mtime(const void *a, const void *b, size_t n)
 {
-	t_file	*fa;
-	t_file	*fb;
+	const t_file	*fa;
+	const t_file	*fb;
 
 	(void)n;
-	fa = (t_file *)a;
-	fb = (t_file *)b;
+	fa = (const t_file *)a;
+	fb = (const t_file *)b;
 	if (fa->mtime->full == fb->mtime->full)
 		return (ft_strcmp(fa->name, fb->name));
-	return (fb->mtime->full - fa->mtime->full);
+	return ((int)fb->mtime->full - (int)fa->mtime->full);
+}
+
+int	ls_cmpfile_atime(const void *a, const void *b, size_t n)
+{
+	const t_file	*fa;
+	const t_file	*fb;
+
+	(void)n;
+	fa = (const t_file *)a;
+	fb = (const t_file *)b;
+	if (fa->atime->full == fb->atime->full)
+		return (ft_strcmp(fa->name, fb->name));
+	return ((int)fb->atime->full - (int)fa->atime->full);
+}
+
+int	ls_cmpfile_btime(const void *a, const void *b, size_t n)
+{
+	const t_file	*fa;
+	const t_file	*fb;
+
+	(void)n;
+	fa = (const t_file *)a;
+	fb = (const t_file *)b;
+	if (fa->btime->full == fb->btime->full)
+		return (ft_strcmp(fa->name, fb->name));
+	return ((int)fb->btime->full - (int)fa->btime->full);
+}
+
+int	ls_cmpfile_size(const void *a, const void *b, size_t n)
+{
+	const t_file	*fa;
+	const t_file	*fb;
+
+	(void)n;
+	fa = (const t_file *)a;
+	fb = (const t_file *)b;
+	return (fb->fst.st_size - fa->fst.st_size);
 }

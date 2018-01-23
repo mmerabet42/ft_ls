@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/01/22 15:27:41 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/01/23 18:55:58 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,10 +18,10 @@ LIBFTD		=	libft
 LIBFT		=	$(LIBFTD)/libft.a
 
 _FT_LSS	=		main.c ls_getoptions.c ls_getmodes.c ls_getnames.c \
-				ls_getfile.c ls_cmpfile.c ls_formatfiles.c \
+				ls_getfile.c ls_cmpfile.c ls_formatfiles.c ls_filecolors.c \
 				ls_printlong.c ls_printnormal.c \
 
-SRCD		=	srcs
+SRCD		=	srcs/
 ICLD		=	-Iincludes -I$(LIBFTD)/includes
 FT_LSS		=	$(patsubst %,$(SRCD)/%,$(_FT_LSS))
 _FT_LSO		=	$(_FT_LSS:.c=.o)
@@ -29,9 +29,9 @@ FT_LSO		=	$(FT_LSS:.c=.o)
 
 SRCS		=	$(FT_LSS)
 _OBJS		=	$(_FT_LSO)
-OBJD		=	objs
-OBJS		=	$(patsubst %,$(SRCD)/%,$(_OBJS))
-OBJB		=	$(patsubst %,$(OBJD)/%,$(_OBJS))
+OBJD		=	objs/
+OBJS		=	$(addprefix $(SRCD),$(_OBJS))
+OBJB		=	$(addprefix $(OBJD),$(_OBJS))
 
 # COLORS
 _GREY=\x1b[30m
@@ -47,18 +47,17 @@ _SUCCESS=$(_RED)
 
 all: $(LIBFT) $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(OBJB)
 	@echo "$(_RED)Compiling$(_END) $(NAME)$(_RED)...$(_END)"
-	@$(CC) -o $(NAME) $(CFLAGS) $(OBJS) $(LIBFT)
-	@mkdir -p $(OBJD)
-	@mv $(OBJS) $(OBJD)/
+	@$(CC) $(CFLAGS) $(LIBFT) $^ -o $(NAME)
 	@echo  "$(NAME) : $(_SUCCESS)done$(_END)"
 
 $(LIBFT):
 	@make -C $(LIBFTD)
 
-%.o: %.c
-	@$(CC) -c -o $@ $< $(ICLD) $(CFLAGS)
+$(OBJD)%.o: $(SRCD)%.c
+	@mkdir -p $(OBJD)
+	@$(CC) $(CFLAGS) -o $@ -c $< $(ICLD)
 
 clean:
 	@make -C $(LIBFTD) clean
@@ -70,8 +69,6 @@ fclean: clean
 	@echo "$(_RED)Cleaning$(_END) : $(NAME)"
 	@/bin/rm -f $(NAME)
 
-re:
-	@make fclean
-	@make
+re: fclean all
 
 .PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/22 17:02:55 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 19:17:48 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,11 @@
 # define LSF_G_M	(1 << 5)
 # define LSF_1		(1 << 6)
 # define LSF_T_M	(1 << 7)
-# define LSFLAGS	"lRartG1T"
+# define LSF_D_M	(1 << 8)
+# define LSF_S_M	(1 << 9)
+# define LSF_U_M	(1 << 10)
+# define LSF_U		(1 << 11)
+# define LSFLAGS	"lRartG1TDSUu"
 
 typedef struct		s_lsops
 {
@@ -49,6 +53,8 @@ typedef struct		s_file
 	unsigned int	major;
 	unsigned int	minor;
 	t_timef			*mtime;
+	t_timef			*atime;
+	t_timef			*btime;
 	struct stat		fst;
 	t_btree			*files;
 }					t_file;
@@ -63,6 +69,12 @@ typedef struct		s_print_info
 	const t_btree	*last_file;
 	const t_lsops	*lsops;
 }					t_print_info;
+
+typedef struct		s_locale_color
+{
+I	char			*fg[12];
+	char			*bg[12];
+}					t_local_color;
 
 t_lsops				*ls_getlsops(int argc, char **argv);
 void				ls_lsopsdel(t_lsops **lsops);
@@ -93,6 +105,9 @@ void				ls_printnormal(t_btree *file, const t_lsops *lsops);
 int					ls_isfar(t_timef *a, t_timef *b);
 
 int					ls_cmpfile_name(const void *a, const void *b, size_t n);
-int					ls_cmpfile_time(const void *a, const void *b, size_t n);
+int					ls_cmpfile_mtime(const void *a, const void *b, size_t n);
+int					ls_cmpfile_atime(const void *a, const void *b, size_t n);
+int					ls_cmpfile_btime(const void *a, const void *b, size_t n);
+int					ls_cmpfile_size(const void *a, const void *b, size_t n);
 
 #endif

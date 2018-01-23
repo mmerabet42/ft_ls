@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/21 23:14:58 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 19:17:47 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 #include <fcntl.h>
 #include <time.h>
 #include <string.h>
-#include <stdio.h>
 #include <errno.h>
 
 static void	filesdel(void *content, size_t n)
@@ -91,10 +90,18 @@ static void	ft_ls(const t_lsops *lsops)
 	}
 }
 
-int			main(int argc, char **argv)
+/*
+** 0;255;145
+** 85;226;165
+*/
+#include <stdio.h>
+#include <locale.h>
+#include <stdlib.h>
+int			main(int argc, char **argv, char **envp)
 {
 	t_lsops			*lsops;
 
+	(void)envp;
 	if (!(lsops = ls_getlsops(argc, argv)))
 		return (0);
 	if (lsops->err)

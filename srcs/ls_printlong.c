@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:45:48 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/20 21:53:55 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 18:37:33 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,30 @@ static char	*getsize(t_file *file, int widths[8])
 static char	*gettime(t_file *file, const t_lsops *lsops)
 {
 	char	*final;
+	char	*tmp;
 
 	final = NULL;
-	if (ls_isfar(file->mtime, lsops->current))
+	if (lsops->options & LSF_T_M & ls_isfar(file->mtime, lsops->current))
 		ft_printf_s(&final, "%s %2u %5u", file->mtime->cmonth,
 				file->mtime->day, file->mtime->year);
 	else
+	{
 		ft_printf_s(&final, "%s %2u %02u:%02u", file->mtime->cmonth,
 				file->mtime->day, file->mtime->hour, file->mtime->min);
+		if (lsops->options & LSF_T_M)
+		{
+			tmp = final;
+			ft_printf_s(&final, "%s:%02u %u", final, file->mtime->sec,
+					file->mtime->year);
+			free(tmp);
+		}
+	}
 	return (final);
 }
 
 static void	printline(t_btree *bt, t_print_info *pinfo)
 {
-	int		b;
-	int		d;
+	int		o;
 	t_file	*file;
 	int		*ws;
 	char	*finals[2];
@@ -51,17 +60,19 @@ static void	printline(t_btree *bt, t_print_info *pinfo)
 	if (!(file = (t_file *)bt->content))
 		return ;
 	ws = pinfo->widths;
-	b = pinfo->lsops->options & LSF_G_M;
-	d = pinfo->lsops->options & LSF_T_M;
+	o = pinfo->lsops->options;
 	finals[0] = getsize(file, ws);
 	finals[1] = gettime(file, pinfo->lsops);
 	ft_printf("%s %*lu %{%s}%-*s  %-*s%{%s}  %*s "
 			"%{%s}%s%{%s} %{%s}%#{%s}%s%{%s}",
-			file->modes, ws[0], file->fst.st_nlink, (b ? "lred" : "-"), ws[1],
-			file->usr_name, ws[2], file->grp_name, (b ? "0" : "-"),
-			ws[7], finals[0], (b ? "cyan" : "-"), finals[1], (b ? "0" : "-"),
-			(b ? ls_file_fg(file) : "-"), (b ? ls_file_bg(file) : "-"),
-			(d ? file->full_name : file->name), (b ? "0" : "-"));
+			file->modes, ws[0], file->fst.st_nlink,
+			(o & LSF_G_M ? "lred" : "-"), ws[1], file->usr_name, ws[2],
+			file->grp_name, (o & LSF_G_M ? "0" : "-"), ws[7], finals[0],
+			(o & LSF_G_M ? "cyan" : "-"), finals[1], (o & LSF_G_M ? "0" : "-"),
+			(o & LSF_G_M ? ls_file_fg(file) : "-"),
+			(o & LSF_G_M ? ls_file_bg(file) : "-"),
+			(o & LSF_D_M ? file->full_name : file->name),
+			(o & LSF_G_M ? "0" : "-"));
 	free(finals[0]);
 	free(finals[1]);
 	if (file->link_name[0])

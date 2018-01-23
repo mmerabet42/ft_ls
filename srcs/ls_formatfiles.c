@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/21 22:18:14 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/23 18:50:26 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,31 +66,4 @@ void			ls_getinfos(t_btree *files, const t_lsops *lsops,
 	pinfo->lsops = lsops;
 	pinfo->ws_col = w.ws_col;
 	ft_btree_iter_d(files, (void(*)(t_btree *, void *))iter_getwidths, pinfo);
-}
-
-char			*ls_file_fg(t_file *file)
-{
-	if (file->modes[0] == '-' && (file->modes[3] == 'x' ||
-				file->modes[6] == 'x' || file->modes[9] == 'x'))
-		return ("red");
-	else if (file->modes[0] == 'd')
-		return ("lgreen");
-	else if (file->modes[0] == 'l')
-		return ("lyellow");
-	else if (file->modes[0] == 'c' || file->modes[0] == 'b')
-		return ("black");
-	else if (file->modes[0] == 's' || file->modes[0] == 'p')
-		return ("magenta");
-	else if (file->name[0] == '.')
-		return ("lblue");
-	return ("white");
-}
-
-char			*ls_file_bg(t_file *file)
-{
-	if (file->modes[0] == 'c')
-		return ("lyellow");
-	else if (file->modes[0] == 'b')
-		return ("lcyan");
-	return ("-");
 }
