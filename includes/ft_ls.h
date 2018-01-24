@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/23 22:33:33 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/24 16:00:27 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ typedef struct		s_print_info
 
 typedef struct		s_locale_color
 {
-	char			*fg[12];
-	char			*bg[12];
+	char			*fg[13];
+	char			*bg[13];
 }					t_locale_color;
 
 t_lsops				*ls_getlsops(int argc, char **argv);

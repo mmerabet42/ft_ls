@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:45:48 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/23 18:37:33 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/24 17:51:53 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ static void	printline(t_btree *bt, t_print_info *pinfo)
 			(o & LSF_G_M ? "lred" : "-"), ws[1], file->usr_name, ws[2],
 			file->grp_name, (o & LSF_G_M ? "0" : "-"), ws[7], finals[0],
 			(o & LSF_G_M ? "cyan" : "-"), finals[1], (o & LSF_G_M ? "0" : "-"),
-			(o & LSF_G_M ? ls_file_fg(file) : "-"),
-			(o & LSF_G_M ? ls_file_bg(file) : "-"),
+			(o & (LSF_G_M | LSF_G) ? ls_file_fg(file) : "-"),
+			(o & (LSF_G_M | LSF_G) ? ls_file_bg(file) : "-"),
 			(o & LSF_D_M ? file->full_name : file->name),
-			(o & LSF_G_M ? "0" : "-"));
+			(o & (LSF_G_M | LSF_G) ? "0" : "-"));
 	free(finals[0]);
 	free(finals[1]);
 	if (file->link_name[0])
