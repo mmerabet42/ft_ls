@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/23 18:50:26 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/25 23:23:21 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,11 @@ void			ls_getinfos(t_btree *files, const t_lsops *lsops,
 {
 	struct winsize	w;
 
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	ioctl(0, TIOCGWINSZ, &w);
 	ft_bzero(pinfo, sizeof(t_print_info));
 	pinfo->files = files;
-	pinfo->last_file = ft_btree_right(files);
+	pinfo->last_file = (lsops->options & LSF_R ? ft_btree_left(files) :
+			ft_btree_right(files));
 	pinfo->lsops = lsops;
 	pinfo->ws_col = w.ws_col;
 	ft_btree_iter_d(files, (void(*)(t_btree *, void *))iter_getwidths, pinfo);

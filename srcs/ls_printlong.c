@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:45:48 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/24 23:43:22 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:40:06 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,8 @@ static char	*gettime(t_file *file, const t_lsops *lsops)
 	return (final);
 }
 
-static void	printline(t_btree *bt, t_print_info *pinfo)
+static void	mainprint(t_file *file, int ws[8], int o, char *finals[2])
 {
-	int		o;
-	t_file	*file;
-	int		*ws;
-	char	*finals[2];
-
-	if (!(file = (t_file *)bt->content))
-		return ;
-	ws = pinfo->widths;
-	o = pinfo->lsops->options;
-	finals[0] = getsize(file, ws);
-	finals[1] = gettime(file, pinfo->lsops);
 	ft_printf("%s %*lu %{%s}%-*s  %-*s%{%s}  %*s "
 			"%{%s}%s%{%s} %{%s}%#{%s}%s%{%s}",
 			file->modes, ws[0], file->fst.st_nlink,
@@ -73,11 +62,23 @@ static void	printline(t_btree *bt, t_print_info *pinfo)
 			(o & (LSF_G_M | LSF_G) ? ls_file_bg(file) : "-"),
 			(o & LSF_D_M ? file->full_name : file->name),
 			(o & (LSF_G_M | LSF_G) ? "0" : "-"));
-	free(finals[0]);
-	free(finals[1]);
 	if (file->link_name[0])
 		ft_printf(" -> %s", file->link_name);
 	ft_printf("\n");
+}
+
+static void	printline(t_btree *bt, t_print_info *pinfo)
+{
+	t_file	*file;
+	char	*finals[2];
+
+	if (!(file = (t_file *)bt->content))
+		return ;
+	finals[0] = getsize(file, pinfo->widths);
+	finals[1] = gettime(file, pinfo->lsops);
+	mainprint(file, pinfo->widths, pinfo->lsops->options, finals);
+	free(finals[0]);
+	free(finals[1]);
 }
 
 void		ls_printlong(t_btree *files, const t_lsops *lsops)

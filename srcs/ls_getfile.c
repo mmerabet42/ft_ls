@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 23:02:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/25 18:20:26 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:26:16 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,22 @@
 #include <unistd.h>
 #include <errno.h>
 
-static char		*getfullpath(const char *path, const char *file_name)
+static char		*getfullpath(const char *path, const char *fname)
 {
 	char		*final;
-	char		lastchar;
+	size_t		pathl;
+	size_t		fnamel;
+	int			l;
 
-	lastchar = path[ft_strlen(path) - 1];
-	ft_printf_s(&final, "%s%?*c%s", path, (lastchar == '/' ? 0 : 1), '/',
-			file_name);
+	pathl = ft_strlen(path);
+	fnamel = ft_strlen(fname);
+	l = (path[pathl - 1] == '/' ? 1 : 0);
+	if (!(final = ft_strnew(pathl + fnamel + (!l ? 1 : 0))))
+		return ((char *)fname);
+	ft_strcat(final, path);
+	if (!l)
+		ft_strcatc(final, '/');
+	ft_strcat(final, fname);
 	return (final);
 }
 
@@ -35,7 +43,6 @@ static t_btree	*ls_readdir(const char *path,
 					DIR *dir, int hidden_files, t_cmpfunc sortfunc)
 {
 	t_btree			*bt;
-	t_btree			*tmp;
 	t_file			*file;
 	struct dirent	*ent;
 	char			*fullpath;
@@ -45,14 +52,13 @@ static t_btree	*ls_readdir(const char *path,
 	{
 		if (ent->d_name[0] != '.' || (ent->d_name[0] == '.' && hidden_files))
 		{
+			if ((hidden_files & LSF_A_M) && (ft_strequ(ent->d_name, ".")
+						|| ft_strequ(ent->d_name, "..")))
+				continue ;
 			fullpath = getfullpath(path, ent->d_name);
 			if ((file = ls_getfile(fullpath)))
-			{
-				tmp = ft_btree_insertf(bt,
-						ft_btree_create(file, sizeof(t_file)), sortfunc);
-				if (!bt)
-					bt = tmp;
-			}
+				ft_btree_insertf_p(&bt, ft_btree_create(file, sizeof(t_file)),
+						sortfunc);
 			free(fullpath);
 		}
 	}

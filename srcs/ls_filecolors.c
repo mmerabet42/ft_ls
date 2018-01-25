@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:50:39 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/25 18:21:57 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:36:42 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 #include "ft_printf_ext.h"
 
 static t_locale_color		g_cur_locale = {
-	{"lgreen", "lyellow", "magenta", "magenta", "red", "black",
-		"black", "red", "red", "black", "lgreen", "-"},
-	{"-", "-", "-", "-", "-", "lcyan", "lyellow", "-", "-", "green", "-", "-"}
+	{";0;255;145", "lyellow", "magenta", "magenta", "red", "black",
+		"black", "red", "red", "black", "black", "-"},
+	{"-", "-", "-", "-", "-", "lcyan", "lyellow", "-", "-", ";0;255;145",
+		"lyellow", "-"}
 };
 
 static const t_color_attr	g_lscolors[] = {
@@ -26,27 +27,36 @@ static const t_color_attr	g_lscolors[] = {
 	{"g", "bold/cyan", "cyan"}, {"h", "bold/lgrey", "lgrey"},
 };
 static const size_t			g_lscolors_len =
-									sizeof(g_lscolors) / sizeof(t_color_attr);
+sizeof(g_lscolors) / sizeof(t_color_attr);
 
-char			*ls_file_fg(t_file *file)
+static char			*ls_file_ext(t_file *file, char *gc[12])
 {
 	if (file->modes[0] == '-' && (file->modes[3] == 'x' ||
 				file->modes[6] == 'x' || file->modes[9] == 'x'))
 	{
 		if (file->fst.st_mode & S_ISUID)
-			return (g_cur_locale.fg[7]);
+			return (gc[7]);
 		else if (file->fst.st_mode & S_ISGID)
-			return (g_cur_locale.fg[8]);
-		return (g_cur_locale.fg[4]);
+			return (gc[8]);
+		return (gc[4]);
 	}
 	else if (file->modes[0] == 'd')
 	{
 		if (file->modes[8] == 'w' && file->fst.st_mode & S_ISVTX)
-			return (g_cur_locale.fg[9]);
+			return (gc[9]);
 		else if (file->modes[8] == 'w' && !(file->fst.st_mode & S_ISVTX))
-			return (g_cur_locale.fg[10]);
-		return (g_cur_locale.fg[0]);
+			return (gc[10]);
+		return (gc[0]);
 	}
+	return (NULL);
+}
+
+char				*ls_file_fg(t_file *file)
+{
+	char	*nm;
+
+	if ((nm = ls_file_ext(file, g_cur_locale.fg)))
+		return (nm);
 	else if (file->modes[0] == 'l')
 		return (g_cur_locale.fg[1]);
 	else if (file->modes[0] == 'c')
@@ -62,25 +72,12 @@ char			*ls_file_fg(t_file *file)
 	return ("-");
 }
 
-char			*ls_file_bg(t_file *file)
+char				*ls_file_bg(t_file *file)
 {
-	if (file->modes[0] == '-' && (file->modes[3] == 'x' ||
-				file->modes[6] == 'x' || file->modes[9] == 'x'))
-	{
-		if (file->fst.st_mode & S_ISUID)
-			return (g_cur_locale.bg[7]);
-		else if (file->fst.st_mode & S_ISGID)
-			return (g_cur_locale.bg[8]);
-		return (g_cur_locale.bg[4]);
-	}
-	else if (file->modes[0] == 'd')
-	{
-		if (file->modes[8] == 'w' && file->fst.st_mode & S_ISVTX)
-			return (g_cur_locale.bg[9]);
-		else if (file->modes[8] == 'w' && !(file->fst.st_mode & S_ISVTX))
-			return (g_cur_locale.bg[10]);
-		return (g_cur_locale.bg[0]);
-	}
+	char	*nm;
+
+	if ((nm = ls_file_ext(file, g_cur_locale.bg)))
+		return (nm);
 	else if (file->modes[0] == 'l')
 		return (g_cur_locale.bg[1]);
 	else if (file->modes[0] == 'c')

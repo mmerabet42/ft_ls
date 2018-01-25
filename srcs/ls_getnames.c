@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 22:49:41 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/24 23:41:27 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/25 21:58:45 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*ls_getusrname(uid_t uid)
 
 void	ls_lsopsdel(t_lsops **lsops)
 {
-	ft_lstdel(&(*lsops)->files, NULL);
+	ft_btree_del(&(*lsops)->files, NULL);
 	ft_timefdel(&(*lsops)->current);
 	ft_memdel((void **)lsops);
 }

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/23 16:44:33 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/25 23:21:53 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,32 @@ static int			get_flags(int argc, char **argv, t_lsops *lsops)
 static void			get_files(int argc, char **argv, int istart,
 							t_lsops *lsops)
 {
-	t_list	*tmp;
+//	t_list	*tmp;
+	t_file	*file;
+	t_btree	*tmp;
 
 	while (istart < argc)
 	{
-		tmp = ft_lstpush(lsops->files,
+		if ((file = ls_getfile(argv[istart])))
+		{
+			tmp = ft_btree_insertf(lsops->files,
+					ft_btree_create(file, sizeof(t_file)), lsops->sortfunc);
+			if (!lsops->files)
+				lsops->files = tmp;
+		}
+		/*	tmp = ft_lstpush(lsops->files,
 				ft_lstcreate(argv[istart], ft_strlen(argv[istart]) + 1));
 		if (!lsops->files)
-			lsops->files = tmp;
+			lsops->files = tmp;*/
 		++istart;
 	}
-	if (!lsops->files)
-		lsops->files = ft_lstcreate(".", 2);
-	else
-		lsops->files = ft_lstsort(lsops->files);
+	if (!lsops->files && (file = ls_getfile(".")))
+		lsops->files = ft_btree_create(file, sizeof(t_file));
+//		lsops->files = ft_lstcreate(".", 2);
+//	else
+//		lsops->files = ft_lstsort(lsops->files);
+	lsops->last = (lsops->options & LSF_R ? ft_btree_left(lsops->files)
+			: ft_btree_right(lsops->files));
 }
 
 t_lsops				*ls_getlsops(int argc, char **argv)

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:46:51 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/24 23:47:15 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/25 23:42:50 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	printline(t_btree *bt, t_print_info *pinfo)
 	ft_printf("%{%s}%#{%s}%s%{%s}%?*c%s",
 			(o & (LSF_G | LSF_G_M) ? ls_file_fg(file) : "-"),
 			(o & (LSF_G | LSF_G_M) ? ls_file_bg(file) : "-"),
-			file->name, (o & (LSF_G | LSF_G_M)  ? "0" : "-"),
+			file->name, (o & (LSF_G | LSF_G_M) ? "0" : "-"),
 			(!islast && !(o & LSF_1) ? ws[4] - ft_strlen(file->name) + 1 : 0),
 			' ', (o & LSF_1 ? "\n" : ""));
 	if ((pinfo->n += ws[4] + (!islast ? 1 : 0)) + ws[4] >= pinfo->ws_col
