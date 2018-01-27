@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/25 23:42:52 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/27 19:00:04 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ static void	ft_ls(t_btree *bt, const t_lsops *lsops)
 	if (!(files = ls_getfiles(file->full_name,
 					lsops->options & (LSF_A | LSF_A_M), lsops->sortfunc))
 			&& errno != 0)
-		ft_printf_fd(2, "ft_ls: %s: %s\n", file->full_name,
-				strerror(errno));
+		ft_printf_fd(2, "ft_ls: %s: %s\n", file->full_name, strerror(errno));
 	else if (files)
 	{
 		if (bt->parent || bt->left || bt->right)
@@ -41,34 +40,6 @@ static void	ft_ls(t_btree *bt, const t_lsops *lsops)
 	if (!islast)
 		ft_printf("\n");
 }
-/*
-static void	ft_ls(const t_lsops *lsops)
-{
-	t_list	*lst;
-	t_btree	*files;
-
-	lst = lsops->files;
-	while (lst)
-	{
-		if (!(files = ls_getfiles((char *)lst->content,
-						lsops->options & (LSF_A | LSF_A_M), lsops->sortfunc))
-				&& errno != 0)
-			ft_printf_fd(2, "ft_ls: %s: %s\n", lst->content,
-					strerror(errno));
-		else if (files)
-		{
-			if (lst->next || lst->parent)
-				ft_printf("%s:\n", lst->content);
-			ls_listfiles(files, lsops);
-		}
-		if ((lst = lst->next))
-			ft_printf("\n");
-	}
-}
-
-** 0;255;145
-** 85;226;165
-*/
 
 static void	set_lscolors(char **envp)
 {
@@ -94,7 +65,7 @@ int			main(int argc, char **argv, char **envp)
 				"usage: ft_ls [-%s] [file ...]\n", lsops->err, LSFLAGS);
 	else
 	{
-		if (lsops->options & LSF_G)
+		if (lsops->options & LSF_G_M)
 			set_lscolors(envp);
 		if (lsops->options & LSF_R)
 			ft_btree_iterv_d(lsops->files, (void(*)(t_btree *, void *))ft_ls,
@@ -102,7 +73,6 @@ int			main(int argc, char **argv, char **envp)
 		else
 			ft_btree_iter_d(lsops->files, (void(*)(t_btree *, void *))ft_ls,
 					(void *)lsops);
-		//ft_ls(lsops);
 	}
 	ls_lsopsdel(&lsops);
 	ft_printf_free_formats();

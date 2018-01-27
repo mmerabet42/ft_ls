@@ -6,16 +6,17 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/23 18:50:39 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/25 21:36:42 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/27 17:39:50 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+#include "ft_mem.h"
 #include "ft_printf_ext.h"
 
 static t_locale_color		g_cur_locale = {
-	{";0;255;145", "lyellow", "magenta", "magenta", "red", "black",
-		"black", "red", "red", "black", "black", "-"},
+	{"bold/;0;255;145", "lyellow", "magenta", "magenta", "lred", "black",
+		"blue", "red", "red", "black", "black", "lblue"},
 	{"-", "-", "-", "-", "-", "lcyan", "lyellow", "-", "-", ";0;255;145",
 		"lyellow", "-"}
 };
@@ -24,7 +25,7 @@ static const t_color_attr	g_lscolors[] = {
 	{"x", "-", "-"}, {"a", "bold/black", "black"}, {"b", "bold/red", "red"},
 	{"c", "bold/green", "green"}, {"d", "bold/;204;204;0", ";204;204;0"},
 	{"e", "bold/blue", "blue"}, {"f", "bold/magenta", "magenta"},
-	{"g", "bold/cyan", "cyan"}, {"h", "bold/lgrey", "lgrey"},
+	{"g", "bold/cyan", "cyan"}, {"h", "bold/lgrey", "lgrey"}
 };
 static const size_t			g_lscolors_len =
 sizeof(g_lscolors) / sizeof(t_color_attr);
@@ -122,6 +123,7 @@ void				ls_setlocale_color(const char *code)
 
 	n = 1;
 	x = 0;
+	ft_bzero(&g_cur_locale, sizeof(t_locale_color));
 	while (*code)
 	{
 		if ((c = get_lscolor(*code, &lr)))

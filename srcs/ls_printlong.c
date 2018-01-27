@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:45:48 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/25 21:40:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/27 18:02:34 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static char	*gettime(t_file *file, const t_lsops *lsops)
 	char	*tmp;
 
 	final = NULL;
-	if (lsops->options & LSF_T_M & ls_isfar(file->mtime, lsops->current))
+	if (!(lsops->options & LSF_T_M) && ls_isfar(file->mtime, lsops->current))
 		ft_printf_s(&final, "%s %2u %5u", file->mtime->cmonth,
 				file->mtime->day, file->mtime->year);
 	else
@@ -55,13 +55,13 @@ static void	mainprint(t_file *file, int ws[8], int o, char *finals[2])
 	ft_printf("%s %*lu %{%s}%-*s  %-*s%{%s}  %*s "
 			"%{%s}%s%{%s} %{%s}%#{%s}%s%{%s}",
 			file->modes, ws[0], file->fst.st_nlink,
-			(o & LSF_G_M ? "lred" : "-"), ws[1], file->usr_name, ws[2],
-			file->grp_name, (o & LSF_G_M ? "0" : "-"), ws[7], finals[0],
-			(o & LSF_G_M ? "cyan" : "-"), finals[1], (o & LSF_G_M ? "0" : "-"),
-			(o & (LSF_G_M | LSF_G) ? ls_file_fg(file) : "-"),
-			(o & (LSF_G_M | LSF_G) ? ls_file_bg(file) : "-"),
+			(o & LSF_Y_M ? "lred" : "-"), ws[1], file->usr_name, ws[2],
+			file->grp_name, (o & LSF_Y_M ? "0" : "-"), ws[7], finals[0],
+			(o & LSF_Y_M ? "cyan" : "-"), finals[1], (o & LSF_Y_M ? "0" : "-"),
+			(o & (LSF_G_M | LSF_Y_M) ? ls_file_fg(file) : "-"),
+			(o & (LSF_G_M | LSF_Y_M) ? ls_file_bg(file) : "-"),
 			(o & LSF_D_M ? file->full_name : file->name),
-			(o & (LSF_G_M | LSF_G) ? "0" : "-"));
+			(o & (LSF_G_M | LSF_Y_M) ? "0" : "-"));
 	if (file->link_name[0])
 		ft_printf(" -> %s", file->link_name);
 	ft_printf("\n");

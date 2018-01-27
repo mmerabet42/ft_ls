@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/25 23:42:55 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/27 19:00:06 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,14 @@
 # define LSF_S_M	(1 << 9)
 # define LSF_U_M	(1 << 10)
 # define LSF_U		(1 << 11)
-# define LSF_G		(1 << 12)
+# define LSF_Y_M	(1 << 12)
 # define LSF_A_M	(1 << 13)
-# define LSFLAGS	"lRartG1TDSUugA"
+# define LSFLAGS	"lRartG1TDSUuYA"
 
 typedef struct		s_lsops
 {
 	char			err;
 	int				options;
-//	t_list			*files;
 	t_btree			*files;
 	t_btree			*last;
 	t_timef			*current;
@@ -109,6 +108,8 @@ void				ls_printlong(t_btree *files, const t_lsops *lsops);
 void				ls_printnormal(t_btree *file, const t_lsops *lsops);
 
 int					ls_isfar(t_timef *a, t_timef *b);
+
+void				ls_filedel_func(void *content, size_t n);
 
 int					ls_cmpfile_name(const void *a, const void *b, size_t n);
 int					ls_cmpfile_mtime(const void *a, const void *b, size_t n);

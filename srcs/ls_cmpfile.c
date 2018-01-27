@@ -6,18 +6,17 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/13 22:50:33 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/23 16:19:21 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/27 18:40:35 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 #include "ft_str.h"
-#include "ft_printf.h"
 
 int	ls_cmpfile_name(const void *a, const void *b, size_t n)
 {
 	(void)n;
-	return (ft_strcmp(((t_file *)a)->name, ((t_file *)b)->name));
+	return (ft_strcmp(((t_file *)a)->full_name, ((t_file *)b)->full_name));
 }
 
 int	ls_cmpfile_mtime(const void *a, const void *b, size_t n)

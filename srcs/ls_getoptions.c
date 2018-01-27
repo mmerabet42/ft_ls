@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 18:07:29 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/25 23:21:53 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/27 18:54:06 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include "ft_mem.h"
 #include "ft_list.h"
 #include "ft_math.h"
+#include "ft_printf.h"
+#include <string.h>
+#include <errno.h>
 
 static t_cmpfunc	getcmpfunc(t_lsops *lsops)
 {
@@ -71,7 +74,6 @@ static int			get_flags(int argc, char **argv, t_lsops *lsops)
 static void			get_files(int argc, char **argv, int istart,
 							t_lsops *lsops)
 {
-//	t_list	*tmp;
 	t_file	*file;
 	t_btree	*tmp;
 
@@ -84,17 +86,12 @@ static void			get_files(int argc, char **argv, int istart,
 			if (!lsops->files)
 				lsops->files = tmp;
 		}
-		/*	tmp = ft_lstpush(lsops->files,
-				ft_lstcreate(argv[istart], ft_strlen(argv[istart]) + 1));
-		if (!lsops->files)
-			lsops->files = tmp;*/
+		else
+			ft_printf_fd(2, "ft_ls: %s: %s\n", argv[istart], strerror(errno));
 		++istart;
 	}
-	if (!lsops->files && (file = ls_getfile(".")))
+	if (!lsops->files && !errno && (file = ls_getfile(".")))
 		lsops->files = ft_btree_create(file, sizeof(t_file));
-//		lsops->files = ft_lstcreate(".", 2);
-//	else
-//		lsops->files = ft_lstsort(lsops->files);
 	lsops->last = (lsops->options & LSF_R ? ft_btree_left(lsops->files)
 			: ft_btree_right(lsops->files));
 }
