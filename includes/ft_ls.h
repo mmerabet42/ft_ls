@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 19:00:06 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/27 22:35:33 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@
 # define LSF_U		(1 << 11)
 # define LSF_Y_M	(1 << 12)
 # define LSF_A_M	(1 << 13)
-# define LSFLAGS	"lRartG1TDSUuYA"
+# define LSF_N		(1 << 14)
+# define LSFLAGS	"lRartG1TDSUuYAn"
 
 typedef struct		s_lsops
 {
@@ -93,8 +94,10 @@ void				ls_filedel(t_file **file);
 void				ls_getmodes(struct stat file_stat,
 							const char *path,
 							char *buffer);
+
 char				*ls_getgrpname(gid_t gid);
 char				*ls_getusrname(uid_t uid);
+void				ls_keepid(void);
 
 char				*ls_file_fg(t_file *file);
 char				*ls_file_bg(t_file *file);

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 19:00:04 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/27 22:41:33 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,17 @@ static void	set_lscolors(char **envp)
 	}
 }
 
+static void	presetls(t_lsops *lsops, char **envp)
+{
+	if (lsops->options & LSF_G_M)
+		set_lscolors(envp);
+	if (lsops->options & LSF_N)
+	{
+		lsops->options |= LSF_L;
+		ls_keepid();
+	}
+}
+
 int			main(int argc, char **argv, char **envp)
 {
 	t_lsops			*lsops;
@@ -65,8 +76,7 @@ int			main(int argc, char **argv, char **envp)
 				"usage: ft_ls [-%s] [file ...]\n", lsops->err, LSFLAGS);
 	else
 	{
-		if (lsops->options & LSF_G_M)
-			set_lscolors(envp);
+		presetls(lsops, envp);
 		if (lsops->options & LSF_R)
 			ft_btree_iterv_d(lsops->files, (void(*)(t_btree *, void *))ft_ls,
 					(void *)lsops);

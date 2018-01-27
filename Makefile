@@ -6,7 +6,7 @@
 #    By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/11 18:07:15 by mmerabet          #+#    #+#              #
-#    Updated: 2018/01/27 17:48:33 by mmerabet         ###   ########.fr        #
+#    Updated: 2018/01/27 22:41:35 by mmerabet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,14 +61,16 @@ $(OBJD)%.o: $(SRCD)%.c
 
 clean:
 	@make -C $(LIBFTD) clean
-	@echo "$(_RED)Cleaning$(_END) : object files"
+	@echo "$(NAME) clean: $(_RED)done$(_END)"
 	@/bin/rm -f $(OBJB)
 
 fclean: clean
 	@make -C $(LIBFTD) fclean
-	@echo "$(_RED)Cleaning$(_END) : $(NAME)"
+	@echo "$(NAME) fclean: $(_RED)done$(_END)"
 	@/bin/rm -f $(NAME)
 
-re: fclean all
+re:
+	@make fclean
+	@make
 
 .PHONY: all clean fclean re
