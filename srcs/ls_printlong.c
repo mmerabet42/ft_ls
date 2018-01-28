@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:45:48 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 18:02:34 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/28 21:21:30 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ static void	mainprint(t_file *file, int ws[8], int o, char *finals[2])
 			(o & LSF_Y_M ? "cyan" : "-"), finals[1], (o & LSF_Y_M ? "0" : "-"),
 			(o & (LSF_G_M | LSF_Y_M) ? ls_file_fg(file) : "-"),
 			(o & (LSF_G_M | LSF_Y_M) ? ls_file_bg(file) : "-"),
-			(o & LSF_D_M ? file->full_name : file->name),
-			(o & (LSF_G_M | LSF_Y_M) ? "0" : "-"));
+			file->dname, (o & (LSF_G_M | LSF_Y_M) ? "0" : "-"));
 	if (file->link_name[0])
 		ft_printf(" -> %s", file->link_name);
 	ft_printf("\n");
@@ -86,7 +85,8 @@ void		ls_printlong(t_btree *files, const t_lsops *lsops)
 	t_print_info pinfo;
 
 	ls_getinfos(files, lsops, &pinfo);
-	ft_printf("total %lu\n", pinfo.blocks);
+	if (files != lsops->files)
+		ft_printf("total %lu\n", pinfo.blocks);
 	if (lsops->options & LSF_R)
 		ft_btree_iterv_d(files, (void(*)(t_btree *, void *))printline, &pinfo);
 	else

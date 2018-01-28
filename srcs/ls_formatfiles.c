@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/15 14:44:30 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 21:57:00 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/28 21:25:39 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int				ls_isfar(t_timef *a, t_timef *b)
 	m = (int)a->year - (int)b->year;
 	fa = (int)a->month + (m > 0 ? 12 * ft_abs(m) : 0);
 	fb = (int)b->month + (m < 0 ? 12 * ft_abs(m) : 0);
-	if (fa - fb > 6 || fa - fb < -6)
+	if (fa - fb >= 6 || fa - fb <= -6)
 		return (1);
 	return (0);
 }
@@ -39,13 +39,17 @@ static void		iter_getwidths(t_btree *bt, t_print_info *pinfo)
 	t_file	*f;
 
 	f = (t_file *)bt->content;
+	if (pinfo->lsops->options & LSF_D_M)
+		f->dname = f->full_name;
+	else
+		f->dname = f->name;
 	pinfo->widths[0] = ft_max(pinfo->widths[0], ft_uintlen(f->fst.st_nlink));
 	pinfo->widths[1] = ft_max(pinfo->widths[1],
 			ft_strlen(f->usr_name ? f->usr_name : "(null)"));
 	pinfo->widths[2] = ft_max(pinfo->widths[2],
 			ft_strlen(f->grp_name ? f->grp_name : "(null)"));
 	pinfo->widths[3] = ft_max(pinfo->widths[3], ft_ulonglen(f->fst.st_size));
-	pinfo->widths[4] = ft_max(pinfo->widths[4], ft_strlen(f->name));
+	pinfo->widths[4] = ft_max(pinfo->widths[4], ft_strlen(f->dname));
 	pinfo->widths[5] = ft_max(pinfo->widths[5], ft_uintlen(f->major));
 	pinfo->widths[6] = ft_max(pinfo->widths[6], ft_uintlen(f->minor));
 	if (f->modes[0] == 'c' || f->modes[0] == 'b')

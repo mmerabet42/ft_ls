@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/11 22:49:41 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 21:24:12 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/28 18:19:50 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ void	ls_filedel_func(void *content, size_t n)
 void	ls_lsopsdel(t_lsops **lsops)
 {
 	ft_btree_del(&(*lsops)->files, ls_filedel_func);
+	ft_btree_del(&(*lsops)->folders, ls_filedel_func);
 	ft_timefdel(&(*lsops)->current);
 	ft_memdel((void **)lsops);
 }

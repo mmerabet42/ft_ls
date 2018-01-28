@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 23:02:02 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 20:34:25 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/28 21:01:15 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,8 @@ t_file			*ls_getfile(const char *path)
 			|| !(f = ft_memalloc(sizeof(t_file))))
 		return (NULL);
 	f->fst = fst;
-	if ((f->name = ft_strrchr(path, '/')))
-		f->name = ft_strdup(f->name + 1);
-	else
-		f->name = ft_strdup(path);
+	f->name = ft_strrchr(path, '/');
+	f->name = ft_strdup(f->name ? f->name + 1 : path);
 	f->full_name = ft_strdup(path);
 	ft_bzero((void *)f->modes, sizeof(char) * 12);
 	ft_bzero((void *)f->link_name, sizeof(char) * 512);

@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/17 18:35:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 22:35:33 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/28 22:24:59 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,16 @@
 # define LSF_Y_M	(1 << 12)
 # define LSF_A_M	(1 << 13)
 # define LSF_N		(1 << 14)
-# define LSFLAGS	"lRartG1TDSUuYAn"
+# define LSF_F		(1 << 15)
+# define LSFLAGS	"lRartG1TDSUuYAnf"
 
 typedef struct		s_lsops
 {
 	char			err;
+	char			n_err;
 	int				options;
 	t_btree			*files;
+	t_btree			*folders;
 	t_btree			*last;
 	t_timef			*current;
 	t_cmpfunc		sortfunc;
@@ -50,6 +53,7 @@ typedef struct		s_file
 {
 	char			*name;
 	char			*full_name;
+	char			*dname;
 	char			link_name[512];
 	char			modes[12];
 	char			*grp_name;
@@ -119,5 +123,6 @@ int					ls_cmpfile_mtime(const void *a, const void *b, size_t n);
 int					ls_cmpfile_atime(const void *a, const void *b, size_t n);
 int					ls_cmpfile_btime(const void *a, const void *b, size_t n);
 int					ls_cmpfile_size(const void *a, const void *b, size_t n);
+int					ls_cmpfile_no(const void *a, const void *b, size_t n);
 
 #endif

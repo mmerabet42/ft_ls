@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/12 18:57:45 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 22:41:33 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/28 22:39:15 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,19 @@ static void	ft_ls(t_btree *bt, const t_lsops *lsops)
 	t_file	*file;
 	int		islast;
 
+	errno = 0;
 	file = (t_file *)bt->content;
+	if ((bt->parent || bt->left || bt->right
+				|| (lsops->files && lsops->folders) || lsops->n_err)
+			&& file->modes[0] == 'd')
+		ft_printf("%s:\n", file->full_name);
 	islast = (bt == lsops->last);
 	if (!(files = ls_getfiles(file->full_name,
 					lsops->options & (LSF_A | LSF_A_M), lsops->sortfunc))
 			&& errno != 0)
-		ft_printf_fd(2, "ft_ls: %s: %s\n", file->full_name, strerror(errno));
-	else if (files)
-	{
-		if (bt->parent || bt->left || bt->right)
-			ft_printf("%s:\n", file->full_name);
+		ft_printf_fd(2, "ls: %s: %s\n", file->name, strerror(errno));
+	else
 		ls_listfiles(files, lsops);
-	}
 	if (!islast)
 		ft_printf("\n");
 }
@@ -63,6 +64,11 @@ static void	presetls(t_lsops *lsops, char **envp)
 		lsops->options |= LSF_L;
 		ls_keepid();
 	}
+	if (lsops->options & LSF_F)
+	{
+		lsops->options |= LSF_A;
+		lsops->options ^= LSF_A_M;
+	}
 }
 
 int			main(int argc, char **argv, char **envp)
@@ -77,11 +83,14 @@ int			main(int argc, char **argv, char **envp)
 	else
 	{
 		presetls(lsops, envp);
+		ls_listfiles(lsops->files, lsops);
+		if (lsops->folders && lsops->files)
+			ft_printf("\n");
 		if (lsops->options & LSF_R)
-			ft_btree_iterv_d(lsops->files, (void(*)(t_btree *, void *))ft_ls,
+			ft_btree_iterv_d(lsops->folders, (void(*)(t_btree *, void *))ft_ls,
 					(void *)lsops);
 		else
-			ft_btree_iter_d(lsops->files, (void(*)(t_btree *, void *))ft_ls,
+			ft_btree_iter_d(lsops->folders, (void(*)(t_btree *, void *))ft_ls,
 					(void *)lsops);
 	}
 	ls_lsopsdel(&lsops);

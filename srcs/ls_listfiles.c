@@ -6,7 +6,7 @@
 /*   By: mmerabet <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/01/25 20:34:52 by mmerabet          #+#    #+#             */
-/*   Updated: 2018/01/27 19:00:02 by mmerabet         ###   ########.fr       */
+/*   Updated: 2018/01/28 21:05:13 by mmerabet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,18 @@ static void	rlistfiles(t_btree *bt, const t_lsops *lsops)
 	t_file	*file;
 	t_btree	*files;
 
+	errno = 0;
 	if ((file = (t_file *)bt->content) && file->modes[0] == 'd'
 			&& !(ft_strequ(file->name, ".") || ft_strequ(file->name, "..")))
 	{
 		ft_printf("\n%s:\n", file->full_name);
-		if (!(files = ls_getfiles(file->full_name,
-						lsops->options & LSF_A, lsops->sortfunc)) && errno != 0)
-			ft_printf_fd(2, "ft_ls: %s: %s\n", file->name,
+		if (!(files = ls_getfiles(file->full_name, lsops->options & LSF_A,
+						lsops->sortfunc)) && errno != 0)
+			ft_printf_fd(2, "ls: %s: %s\n", file->name,
 					strerror(errno));
 		else if (files)
 			ls_listfiles(files, lsops);
 	}
-	errno = 0;
 }
 
 void		ls_listfiles(t_btree *files, const t_lsops *lsops)
@@ -61,5 +61,6 @@ void		ls_listfiles(t_btree *files, const t_lsops *lsops)
 			ft_btree_iter_d(files, (void(*)(t_btree *, void *))rlistfiles,
 					(void *)lsops);
 	}
-	ft_btree_del(&files, filesdel);
+	if (files != lsops->files)
+		ft_btree_del(&files, filesdel);
 }
