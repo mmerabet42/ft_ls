@@ -16,4 +16,4 @@ And with some option combinations, we can change its behavior:
 
 * ![ft_ls2](/screenshots/ft_ls2.png)
 
-Here we gave 3 different options, `Y`, `l` and `t`. The `Y` option colors the output, the `l` option ask for more details and prints them, and the `t` option sort the files by modification time.
+Here we gave 3 different options, `Y`, `l` and `t`. The `Y` option colors the output, the `l` option prints more details, and the `t` option sort the files by modification time.
