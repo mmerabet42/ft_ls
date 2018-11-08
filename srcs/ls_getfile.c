@@ -103,7 +103,11 @@ t_file			*ls_getfile(const char *path)
 	f->usr_name = ls_getusrname(f->fst.st_uid);
 	f->mtime = ft_timefnew(&f->fst.st_mtime);
 	f->atime = ft_timefnew(&f->fst.st_atime);
+#ifdef __linux__
+	f->btime = NULL;
+#else
 	f->btime = ft_timefnew(&f->fst.st_birthtime);
+#endif
 	f->major = major(f->fst.st_rdev);
 	f->minor = minor(f->fst.st_rdev);
 	if (f->modes[0] == 'l')

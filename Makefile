@@ -50,7 +50,7 @@ all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJB)
 	@echo "$(_RED)Compiling$(_END) $(NAME)$(_RED)...$(_END)"
-	@$(CC) $(CFLAGS) $(LIBFT) $^ -o $(NAME)
+	@$(CC) $(CFLAGS) $^ -o $(NAME) $(LIBFT) -lacl
 	@echo  "$(NAME) : $(_SUCCESS)done$(_END)"
 
 $(LIBFT):

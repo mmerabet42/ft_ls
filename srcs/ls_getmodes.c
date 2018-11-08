@@ -11,7 +11,10 @@
 /* ************************************************************************** */
 
 #include <sys/xattr.h>
-#include <sys/acl.h>
+
+# include <sys/types.h>
+# include <sys/acl.h>
+# include <attr/xattr.h>
 
 #include "ft_ls.h"
 #include "ft_mem.h"
@@ -95,6 +98,15 @@ void		ls_getmodes(struct stat file_stat, const char *path, char *buffer)
 	check_owner_rights(file_stat.st_mode, buffer);
 	check_group_rights(file_stat.st_mode, buffer);
 	check_other_rights(file_stat.st_mode, buffer);
+#ifdef __linux__
+	if (listxattr(path, NULL, 0) > 0)
+		buffer[10] = '@';
+	else if ((acl = acl_get_file(path, ACL_TYPE_ACCESS)))
+	{
+		buffer[10] = '+';
+		acl_free((void *)acl);
+	}
+#else
 	if (listxattr(path, NULL, 0, XATTR_NOFOLLOW) > 0)
 		buffer[10] = '@';
 	else if ((acl = acl_get_file(path, ACL_TYPE_EXTENDED)))
@@ -102,4 +114,5 @@ void		ls_getmodes(struct stat file_stat, const char *path, char *buffer)
 		buffer[10] = '+';
 		acl_free((void *)acl);
 	}
+#endif
 }
