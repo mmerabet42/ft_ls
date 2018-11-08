@@ -1,6 +1,6 @@
 # What is '**ls**'
 
-**ls** is a command used for listing directories in a file system. And can also print details about files and/or directories. The behavior of the command depends on the options it receives from the arguments.
+**ls** is a command used for listing directories in a file system. The behavior of the command depends on the options it receives from its arguments.
 
 `usage: ft_ls [-lRartG1TDSUuYAnf] [file ...]`
 
@@ -20,7 +20,7 @@ And with some option combinations, we can change its behavior:
 
 Here we gave 3 different options, `Y`, `l` and `t`. The `Y` option colors the output, the `l` option prints more details, and the `t` option sort the files by modification time.
 
-Here is a table of all the available option
+Here is a table of all the available options
 
 | Option | Description |
 | --- | --- |
