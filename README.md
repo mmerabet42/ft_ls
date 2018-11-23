@@ -10,7 +10,7 @@ Without arguments nor options, it lists the files and directories of the current
 
 * ![ft_ls0](/screenshots/ft_ls0.png)
 
-It can list specific directories that are specified in arguments:
+It can list directories which are specified in arguments:
 
 * ![ft_ls1](/screenshots/ft_ls1.png)
 
